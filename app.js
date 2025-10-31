@@ -20,12 +20,20 @@ function updateDisplay() {
 
     const plusBtn = document.createElement("button");
     plusBtn.textContent = "+";
-    plusBtn.onclick = () => changeBalance(index, 50);
+    plusBtn.onclick = () => {
+      const input = prompt(`Add amount to ${acc.name}:`);
+      const amount = parseFloat(input);
+      if (!isNaN(amount)) changeBalance(index, amount);
+    };
 
     const minusBtn = document.createElement("button");
     minusBtn.textContent = "−";
     minusBtn.className = "minus";
-    minusBtn.onclick = () => changeBalance(index, -50);
+    minusBtn.onclick = () => {
+      const input = prompt(`Subtract amount from ${acc.name}:`);
+      const amount = parseFloat(input);
+      if (!isNaN(amount)) changeBalance(index, -amount);
+    };
 
     buttonContainer.appendChild(plusBtn);
     buttonContainer.appendChild(minusBtn);
