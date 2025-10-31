@@ -1,0 +1,46 @@
+body {
+  font-family: sans-serif;
+  max-width: 400px;
+  margin: auto;
+  padding: 1em;
+  background: #f9f9f9;
+}
+.chart {
+  height: 150px;
+  background: #e0e0e0;
+  margin-bottom: 1em;
+  text-align: center;
+  line-height: 150px;
+  border-radius: 8px;
+  font-size: 1.2em;
+  color: #555;
+}
+.account {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: white;
+  padding: 0.5em;
+  margin: 0.5em 0;
+  border-radius: 6px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+.account-name {
+  flex: 1;
+  font-weight: bold;
+}
+.account-buttons {
+  display: flex;
+  gap: 0.25em;
+}
+.account-buttons button {
+  padding: 0.3em 0.6em;
+  font-size: 1em;
+  background-color: #4caf50;
+  color: white;
+  border: none;
+  border-radius: 4px;
+}
+.account-buttons button.minus {
+  background-color: #f44336;
+}
