@@ -13,7 +13,9 @@ function updateDisplay() {
 
     const nameSpan = document.createElement("span");
     nameSpan.className = "account-name";
-    nameSpan.textContent = `${acc.name} $${acc.balance.toFixed(2)}`;
+    nameSpan.innerHTML = `<strong>${
+      acc.name
+    }</strong><br><span class="balance">$${acc.balance.toFixed(2)}</span>`;
 
     const buttonContainer = document.createElement("div");
     buttonContainer.className = "account-buttons";
