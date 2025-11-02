@@ -20,9 +20,8 @@ async function loadAccounts() {
     const response = await fetch(
       "https://coincise-api.simongerula.workers.dev/assets/",
       {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
+        method: "GET",
+        headers: getAuthHeaders(),
       }
     );
 
