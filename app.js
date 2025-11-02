@@ -246,9 +246,43 @@ function showLoginCard() {
   container.innerHTML = `
     <div class="auth-card">
       <h2>Authentication Required</h2>
-      <p>Please log in to view your accounts</p>
+      <p>Please <a href="#" class="login-link">log in</a> to view your accounts</p>
     </div>
   `;
+
+  // Add click handler for login link
+  container
+    .querySelector(".login-link")
+    .addEventListener("click", async (e) => {
+      e.preventDefault();
+      const userCode = prompt("Please enter user code:");
+
+      if (!userCode) return;
+
+      try {
+        const response = await fetch(
+          "https://coincise-api.simongerula.workers.dev/auth",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ userCode }),
+          }
+        );
+
+        if (response.status === 201) {
+          const data = await response.json();
+          localStorage.setItem("auth_token", data.token);
+          loadAccounts();
+        } else {
+          alert("Invalid user code. Please try again.");
+        }
+      } catch (error) {
+        console.error("Authentication error:", error);
+        alert("Login failed. Please try again later.");
+      }
+    });
 }
 
 document.addEventListener("DOMContentLoaded", loadAccounts);

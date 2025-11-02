@@ -246,3 +246,13 @@ button.minus:hover {
   margin: 0;
   color: #666;
 }
+
+.login-link {
+  color: #0066cc;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.login-link:hover {
+  color: #004999;
+}
