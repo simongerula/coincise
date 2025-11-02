@@ -265,41 +265,6 @@ async function addAccount() {
   }
 }
 
-// function updateRemoveButton() {
-//   const removeBtn = document.getElementById("removeBtn");
-//   const checkboxes = document.querySelectorAll(".account-checkbox");
-//   const checkedBoxes = Array.from(checkboxes).filter((box) => box.checked);
-
-//   removeBtn.disabled = checkedBoxes.length !== 1;
-// }
-
-// async function removeAccount() {
-//   const checkboxes = document.querySelectorAll(".account-checkbox");
-//   const selectedIndex = Array.from(checkboxes).findIndex((box) => box.checked);
-
-//   if (selectedIndex === -1) return;
-
-//   try {
-//     const accountToRemove = accounts[selectedIndex];
-//     const response = await fetch(
-//       `https://coincise-api.simongerula.workers.dev/assets/${accountToRemove.id}`,
-//       {
-//         method: "DELETE",
-//         headers: getAuthHeaders(),
-//       }
-//     );
-
-//     if (!response.ok) {
-//       throw new Error("Network response was not ok");
-//     }
-
-//     await loadAccounts();
-//   } catch (error) {
-//     console.error("Error removing account:", error);
-//     alert("Failed to remove account. Please try again.");
-//   }
-// }
-
 function changeBalance(index, amount) {
   accounts[index].balance += amount;
   fetch(
@@ -328,14 +293,15 @@ function showLoginCard() {
     </div>
   `;
 
-  // Add click handler for login link
   container
     .querySelector(".login-link")
     .addEventListener("click", async (e) => {
       e.preventDefault();
-      const userCode = prompt("Please enter user code:");
+      const username = prompt("Please enter username:");
+      if (!username) return;
 
-      if (!userCode) return;
+      const password = prompt("Please enter password:");
+      if (!password) return;
 
       try {
         const response = await fetch(
@@ -345,7 +311,7 @@ function showLoginCard() {
             headers: {
               "Content-Type": "application/json",
             },
-            body: JSON.stringify({ userCode }),
+            body: JSON.stringify({ username, password }),
           }
         );
 
@@ -354,7 +320,7 @@ function showLoginCard() {
           localStorage.setItem("auth_token", data.token);
           loadAccounts();
         } else {
-          alert("Invalid user code. Please try again.");
+          alert("Invalid credentials. Please try again.");
         }
       } catch (error) {
         console.error("Authentication error:", error);
