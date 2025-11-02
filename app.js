@@ -168,7 +168,7 @@ function updateWorthChart(currentTotal) {
       labels: months,
       datasets: [
         {
-          label: "Total Worth",
+          label: "", // Removed the "Total Worth" label
           data: data,
           borderColor: "rgb(75, 192, 192)",
           tension: 0.1,
@@ -178,21 +178,25 @@ function updateWorthChart(currentTotal) {
     },
     options: {
       responsive: true,
+      maintainAspectRatio: false, // Allow custom height
+      plugins: {
+        legend: {
+          display: false, // Hide the legend completely
+        },
+        tooltip: {
+          callbacks: {
+            label: function (context) {
+              return "$" + context.parsed.y.toFixed(2);
+            },
+          },
+        },
+      },
       scales: {
         y: {
           beginAtZero: true,
           ticks: {
             callback: function (value) {
               return "$" + value.toFixed(2);
-            },
-          },
-        },
-      },
-      plugins: {
-        tooltip: {
-          callbacks: {
-            label: function (context) {
-              return "$" + context.parsed.y.toFixed(2);
             },
           },
         },

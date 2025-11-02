@@ -43,7 +43,8 @@ body {
 }
 
 canvas#worthChart {
-  max-height: 300px;
+  width: 100% !important;
+  height: 200px !important; /* Fixed height */
   margin: 20px 0;
   padding: 10px;
   background-color: white;
