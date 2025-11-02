@@ -112,7 +112,7 @@ async function loadAccounts() {
           try {
             const response = await fetch(
               `https://coincise-api.simongerula.workers.dev/assets/${acc.id}`,
-              { method: "DELETE" }
+              { method: "DELETE", headers: getAuthHeaders() }
             );
             if (!response.ok) throw new Error("Network response was not ok");
             await loadAccounts();
@@ -265,40 +265,40 @@ async function addAccount() {
   }
 }
 
-function updateRemoveButton() {
-  const removeBtn = document.getElementById("removeBtn");
-  const checkboxes = document.querySelectorAll(".account-checkbox");
-  const checkedBoxes = Array.from(checkboxes).filter((box) => box.checked);
+// function updateRemoveButton() {
+//   const removeBtn = document.getElementById("removeBtn");
+//   const checkboxes = document.querySelectorAll(".account-checkbox");
+//   const checkedBoxes = Array.from(checkboxes).filter((box) => box.checked);
 
-  removeBtn.disabled = checkedBoxes.length !== 1;
-}
+//   removeBtn.disabled = checkedBoxes.length !== 1;
+// }
 
-async function removeAccount() {
-  const checkboxes = document.querySelectorAll(".account-checkbox");
-  const selectedIndex = Array.from(checkboxes).findIndex((box) => box.checked);
+// async function removeAccount() {
+//   const checkboxes = document.querySelectorAll(".account-checkbox");
+//   const selectedIndex = Array.from(checkboxes).findIndex((box) => box.checked);
 
-  if (selectedIndex === -1) return;
+//   if (selectedIndex === -1) return;
 
-  try {
-    const accountToRemove = accounts[selectedIndex];
-    const response = await fetch(
-      `https://coincise-api.simongerula.workers.dev/assets/${accountToRemove.id}`,
-      {
-        method: "DELETE",
-        headers: getAuthHeaders(),
-      }
-    );
+//   try {
+//     const accountToRemove = accounts[selectedIndex];
+//     const response = await fetch(
+//       `https://coincise-api.simongerula.workers.dev/assets/${accountToRemove.id}`,
+//       {
+//         method: "DELETE",
+//         headers: getAuthHeaders(),
+//       }
+//     );
 
-    if (!response.ok) {
-      throw new Error("Network response was not ok");
-    }
+//     if (!response.ok) {
+//       throw new Error("Network response was not ok");
+//     }
 
-    await loadAccounts();
-  } catch (error) {
-    console.error("Error removing account:", error);
-    alert("Failed to remove account. Please try again.");
-  }
-}
+//     await loadAccounts();
+//   } catch (error) {
+//     console.error("Error removing account:", error);
+//     alert("Failed to remove account. Please try again.");
+//   }
+// }
 
 function changeBalance(index, amount) {
   accounts[index].balance += amount;
