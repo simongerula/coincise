@@ -1,8 +1,0 @@
-.account-checkbox {
-    margin-right: 8px;
-}
-
-button:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
-}

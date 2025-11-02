@@ -32,26 +32,67 @@ async function loadAccounts() {
       const buttonContainer = document.createElement("div");
       buttonContainer.className = "account-buttons";
 
-      const checkbox = document.createElement("input");
-      checkbox.type = "checkbox";
-      checkbox.className = "account-checkbox";
-      checkbox.onclick = () => updateRemoveButton();
+      // Create kebab button and dropdown
+      const kebabBtn = document.createElement("button");
+      kebabBtn.className = "kebab-menu";
+      kebabBtn.innerHTML = "⋮";
+      kebabBtn.onclick = (e) => {
+        e.stopPropagation();
+        const dropdown = kebabBtn.nextElementSibling;
+        dropdown.classList.toggle("show");
 
-      const plusBtn = document.createElement("button");
-      plusBtn.textContent = "+";
-      plusBtn.onclick = () => {
+        // Close other open dropdowns
+        document.querySelectorAll(".dropdown-content.show").forEach((menu) => {
+          if (menu !== dropdown) menu.classList.remove("show");
+        });
+      };
+
+      const dropdown = document.createElement("div");
+      dropdown.className = "dropdown-content";
+
+      const addAction = document.createElement("div");
+      addAction.className = "dropdown-item";
+      addAction.textContent = "Add funds";
+      addAction.onclick = () => {
         const input = prompt(`Add amount to ${acc.name}:`);
         const amount = parseFloat(input);
         if (!isNaN(amount)) changeBalance(index, amount);
       };
 
-      const minusBtn = document.createElement("button");
-      minusBtn.textContent = "−";
-      minusBtn.className = "minus";
+      const subtractAction = document.createElement("div");
+      subtractAction.className = "dropdown-item";
+      subtractAction.textContent = "Subtract funds";
+      subtractAction.onclick = () => {
+        const input = prompt(`Subtract amount from ${acc.name}:`);
+        const amount = parseFloat(input);
+        if (!isNaN(amount)) changeBalance(index, -amount);
+      };
 
-      buttonContainer.appendChild(plusBtn);
-      buttonContainer.appendChild(minusBtn);
-      buttonContainer.appendChild(checkbox);
+      const deleteAction = document.createElement("div");
+      deleteAction.className = "dropdown-item delete";
+      deleteAction.textContent = "Delete account";
+      deleteAction.onclick = async () => {
+        if (confirm(`Are you sure you want to delete ${acc.name}?`)) {
+          try {
+            const response = await fetch(
+              `https://coincise-api.simongerula.workers.dev/assets/${acc.id}`,
+              { method: "DELETE" }
+            );
+            if (!response.ok) throw new Error("Network response was not ok");
+            await loadAccounts();
+          } catch (error) {
+            console.error("Error removing account:", error);
+            alert("Failed to remove account. Please try again.");
+          }
+        }
+      };
+
+      dropdown.appendChild(addAction);
+      dropdown.appendChild(subtractAction);
+      dropdown.appendChild(deleteAction);
+
+      buttonContainer.appendChild(kebabBtn);
+      buttonContainer.appendChild(dropdown);
 
       div.appendChild(nameSpan);
       div.appendChild(buttonContainer);
@@ -179,3 +220,11 @@ function changeBalance(index, amount) {
 }
 
 document.addEventListener("DOMContentLoaded", loadAccounts);
+
+document.addEventListener("click", (e) => {
+  if (!e.target.matches(".kebab-menu")) {
+    document.querySelectorAll(".dropdown-content.show").forEach((dropdown) => {
+      dropdown.classList.remove("show");
+    });
+  }
+});
