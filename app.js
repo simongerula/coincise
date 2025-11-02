@@ -32,6 +32,11 @@ async function loadAccounts() {
       const buttonContainer = document.createElement("div");
       buttonContainer.className = "account-buttons";
 
+      const checkbox = document.createElement("input");
+      checkbox.type = "checkbox";
+      checkbox.className = "account-checkbox";
+      checkbox.onclick = () => updateRemoveButton();
+
       const plusBtn = document.createElement("button");
       plusBtn.textContent = "+";
       plusBtn.onclick = () => {
@@ -43,12 +48,8 @@ async function loadAccounts() {
       const minusBtn = document.createElement("button");
       minusBtn.textContent = "−";
       minusBtn.className = "minus";
-      minusBtn.onclick = () => {
-        const input = prompt(`Subtract amount from ${acc.name}:`);
-        const amount = parseFloat(input);
-        if (!isNaN(amount)) changeBalance(index, -amount);
-      };
 
+      buttonContainer.appendChild(checkbox);
       buttonContainer.appendChild(plusBtn);
       buttonContainer.appendChild(minusBtn);
 
@@ -122,13 +123,24 @@ async function addAccount() {
   }
 }
 
+function updateRemoveButton() {
+  const removeBtn = document.getElementById("removeBtn");
+  const checkboxes = document.querySelectorAll(".account-checkbox");
+  const checkedBoxes = Array.from(checkboxes).filter((box) => box.checked);
+
+  removeBtn.disabled = checkedBoxes.length !== 1;
+}
+
 async function removeAccount() {
-  if (accounts.length === 0) return alert("No accounts to remove");
+  const checkboxes = document.querySelectorAll(".account-checkbox");
+  const selectedIndex = Array.from(checkboxes).findIndex((box) => box.checked);
+
+  if (selectedIndex === -1) return;
 
   try {
-    const lastAccount = accounts[accounts.length - 1];
+    const accountToRemove = accounts[selectedIndex];
     const response = await fetch(
-      `https://coincise-api.simongerula.workers.dev/assets/${lastAccount.id}`,
+      `https://coincise-api.simongerula.workers.dev/assets/${accountToRemove.id}`,
       {
         method: "DELETE",
       }
@@ -138,7 +150,7 @@ async function removeAccount() {
       throw new Error("Network response was not ok");
     }
 
-    await loadAccounts(); // Replace updateDisplay with loadAccounts
+    await loadAccounts();
   } catch (error) {
     console.error("Error removing account:", error);
     alert("Failed to remove account. Please try again.");

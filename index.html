@@ -12,7 +12,9 @@
       <h2>Total worth: $<span id="total">0</span></h2>
       <div class="action-buttons">
         <button onclick="addAccount()">Add account</button>
-        <button onclick="removeAccount()">Remove account</button>
+        <button id="removeBtn" onclick="removeAccount()" disabled>
+          Remove Account
+        </button>
       </div>
       <div id="accounts"></div>
     </div>

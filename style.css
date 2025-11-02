@@ -148,3 +148,12 @@ button.minus:hover {
   align-items: center;
   z-index: 1000;
 }
+
+.account-checkbox {
+  margin-right: 8px;
+}
+
+button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
