@@ -26,7 +26,7 @@ body {
   padding: 1.2rem;
   border-radius: 12px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-  min-height: auto; /* Remove fixed min-height */
+  min-height: 100vh; /* Remove fixed min-height */
   max-height: 100vh; /* Limit maximum height */
   overflow-y: auto; /* Enable scrolling if content is too long */
   margin-bottom: 1rem; /* Add some bottom spacing */
