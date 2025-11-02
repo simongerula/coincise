@@ -32,21 +32,20 @@ body {
 /* Chart placeholder */
 .chart {
   height: 140px;
-  background: #e0e0e0;
+  background: white; /* Changed from #e0e0e0 to match chart background */
   border-radius: 10px;
   margin-bottom: 1rem;
+  padding: 0; /* Remove padding */
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #666;
-  font-size: 1.1rem;
 }
 
 canvas#worthChart {
   width: 100% !important;
-  height: 200px !important; /* Fixed height */
-  margin: 20px 0;
-  padding: 10px;
+  height: 140px !important; /* Match the chart container height */
+  margin: 0; /* Remove margins */
+  padding: 5px; /* Reduce padding */
   background-color: white;
   border-radius: 8px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);

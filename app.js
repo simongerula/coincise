@@ -178,7 +178,7 @@ function updateWorthChart(currentTotal) {
     },
     options: {
       responsive: true,
-      maintainAspectRatio: false, // Allow custom height
+      maintainAspectRatio: true, // Changed to true
       plugins: {
         legend: {
           display: false, // Hide the legend completely
@@ -199,6 +199,14 @@ function updateWorthChart(currentTotal) {
               return "$" + value.toFixed(2);
             },
           },
+        },
+      },
+      layout: {
+        padding: {
+          left: 5,
+          right: 5,
+          top: 5,
+          bottom: 5,
         },
       },
     },
