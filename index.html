@@ -9,12 +9,11 @@
   <body>
     <div class="container">
       <div class="chart">📈 Chart Placeholder</div>
-      <h2>Total worth: $<span id="total">0</span></h2>
+      <div class="total-card">
+        <h2>Total worth: $<span id="total">0</span></h2>
+      </div>
       <div class="action-buttons">
         <button onclick="addAccount()">Add account</button>
-        <button id="removeBtn" onclick="removeAccount()" disabled>
-          Remove Account
-        </button>
       </div>
       <div id="accounts"></div>
     </div>
