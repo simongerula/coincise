@@ -14,6 +14,8 @@ body {
   flex-direction: column;
   align-items: center;
   min-height: 100vh;
+  max-height: 100vh; /* Prevent body from growing beyond viewport */
+  overflow: hidden; /* Prevent body scrolling */
 }
 
 /* App container */
@@ -24,9 +26,10 @@ body {
   padding: 1.2rem;
   border-radius: 12px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-  min-height: calc(
-    100vh - 2rem
-  ); /* Subtract body padding (1rem top + 1rem bottom) */
+  min-height: auto; /* Remove fixed min-height */
+  max-height: 100vh; /* Limit maximum height */
+  overflow-y: auto; /* Enable scrolling if content is too long */
+  margin-bottom: 1rem; /* Add some bottom spacing */
 }
 
 /* Chart placeholder */
