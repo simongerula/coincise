@@ -63,55 +63,55 @@ async function loadAccounts() {
   }
 }
 
-let accounts = [];
+// let accounts = [];
 
-function updateDisplay() {
-  const container = document.getElementById("accounts");
-  container.innerHTML = "";
-  let total = 0;
+// function updateDisplay() {
+//   const container = document.getElementById("accounts");
+//   container.innerHTML = "";
+//   let total = 0;
 
-  accounts.forEach((acc, index) => {
-    total += acc.balance;
+//   accounts.forEach((acc, index) => {
+//     total += acc.balance;
 
-    const div = document.createElement("div");
-    div.className = "account";
+//     const div = document.createElement("div");
+//     div.className = "account";
 
-    const nameSpan = document.createElement("span");
-    nameSpan.className = "account-name";
-    nameSpan.innerHTML = `<strong>${
-      acc.name
-    }</strong><br><span class="balance">$${acc.balance.toFixed(2)}</span>`;
+//     const nameSpan = document.createElement("span");
+//     nameSpan.className = "account-name";
+//     nameSpan.innerHTML = `<strong>${
+//       acc.name
+//     }</strong><br><span class="balance">$${acc.balance.toFixed(2)}</span>`;
 
-    const buttonContainer = document.createElement("div");
-    buttonContainer.className = "account-buttons";
+//     const buttonContainer = document.createElement("div");
+//     buttonContainer.className = "account-buttons";
 
-    const plusBtn = document.createElement("button");
-    plusBtn.textContent = "+";
-    plusBtn.onclick = () => {
-      const input = prompt(`Add amount to ${acc.name}:`);
-      const amount = parseFloat(input);
-      if (!isNaN(amount)) changeBalance(index, amount);
-    };
+//     const plusBtn = document.createElement("button");
+//     plusBtn.textContent = "+";
+//     plusBtn.onclick = () => {
+//       const input = prompt(`Add amount to ${acc.name}:`);
+//       const amount = parseFloat(input);
+//       if (!isNaN(amount)) changeBalance(index, amount);
+//     };
 
-    const minusBtn = document.createElement("button");
-    minusBtn.textContent = "−";
-    minusBtn.className = "minus";
-    minusBtn.onclick = () => {
-      const input = prompt(`Subtract amount from ${acc.name}:`);
-      const amount = parseFloat(input);
-      if (!isNaN(amount)) changeBalance(index, -amount);
-    };
+//     const minusBtn = document.createElement("button");
+//     minusBtn.textContent = "−";
+//     minusBtn.className = "minus";
+//     minusBtn.onclick = () => {
+//       const input = prompt(`Subtract amount from ${acc.name}:`);
+//       const amount = parseFloat(input);
+//       if (!isNaN(amount)) changeBalance(index, -amount);
+//     };
 
-    buttonContainer.appendChild(plusBtn);
-    buttonContainer.appendChild(minusBtn);
+//     buttonContainer.appendChild(plusBtn);
+//     buttonContainer.appendChild(minusBtn);
 
-    div.appendChild(nameSpan);
-    div.appendChild(buttonContainer);
-    container.appendChild(div);
-  });
+//     div.appendChild(nameSpan);
+//     div.appendChild(buttonContainer);
+//     container.appendChild(div);
+//   });
 
-  document.getElementById("total").textContent = total.toFixed(2);
-}
+//   document.getElementById("total").textContent = total.toFixed(2);
+// }
 
 async function addAccount() {
   const name = prompt("Enter account name:");
@@ -178,9 +178,25 @@ async function removeAccount() {
 
 function changeBalance(index, amount) {
   accounts[index].balance += amount;
-  updateDisplay();
+  fetch(
+    `https://coincise-api.simongerula.workers.dev/assets/${accounts[index].id}`,
+    {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        balance: accounts[index].balance,
+      }),
+    }
+  ).then((response) => {
+    if (!response.ok) {
+      throw new Error("Network response was not ok");
+    }
+    loadAccounts();
+  });
 }
 
 document.addEventListener("DOMContentLoaded", loadAccounts);
 
-updateDisplay();
+// updateDisplay();
