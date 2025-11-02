@@ -1,3 +1,11 @@
+function getAuthHeaders() {
+  const token = localStorage.getItem("auth_token");
+  return {
+    Authorization: `Bearer ${token}`,
+    "Content-Type": "application/json",
+  };
+}
+
 async function loadAccounts() {
   const token = localStorage.getItem("auth_token");
   if (!token) {
@@ -160,9 +168,7 @@ async function addAccount() {
       "https://coincise-api.simongerula.workers.dev/assets/",
       {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: getAuthHeaders(),
         body: JSON.stringify({
           name: newAccount.name,
           balance: newAccount.balance,
@@ -201,6 +207,7 @@ async function removeAccount() {
       `https://coincise-api.simongerula.workers.dev/assets/${accountToRemove.id}`,
       {
         method: "DELETE",
+        headers: getAuthHeaders(),
       }
     );
 
@@ -221,9 +228,7 @@ function changeBalance(index, amount) {
     `https://coincise-api.simongerula.workers.dev/assets/${accounts[index].id}`,
     {
       method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-      },
+      headers: getAuthHeaders(),
       body: JSON.stringify({
         balance: accounts[index].balance,
       }),
