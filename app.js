@@ -48,22 +48,45 @@ function updateDisplay() {
   document.getElementById("total").textContent = total.toFixed(2);
 }
 
-function addAccount() {
+async function addAccount() {
   const name = prompt("Enter account name:");
   if (!name) return;
 
   const balanceStr = prompt("Initial balance:");
   const balance = parseFloat(balanceStr);
-  if (isNaN(balance)) return alert("Invalid balance");
+  if (isNaN(totalValue)) return alert("Invalid balance");
 
   const newAccount = {
     id: Date.now(),
     name,
-    balance,
+    balance: balance,
   };
 
-  accounts.push(newAccount);
-  updateDisplay();
+  try {
+    const response = await fetch(
+      "https://coincise-api.simongerula.workers.dev/assets/",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          name: newAccount.name,
+          balance: newAccount.balance,
+        }),
+      }
+    );
+
+    if (!response.ok) {
+      throw new Error("Network response was not ok");
+    }
+
+    accounts.push(newAccount);
+    updateDisplay();
+  } catch (error) {
+    console.error("Error adding account:", error);
+    alert("Failed to add account. Please try again.");
+  }
 }
 
 function removeAccount() {
