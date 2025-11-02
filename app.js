@@ -9,19 +9,49 @@ async function loadAccounts() {
     accountsContainer.innerHTML = ""; // Clear existing accounts
 
     let total = 0;
-    accounts.forEach((account) => {
-      const accountDiv = document.createElement("div");
-      accountDiv.className = "account";
-      accountDiv.innerHTML = `
-                <input type="text" value="${account.name}" readonly>
-                <input type="number" value="${account.balance}" readonly>
-                <span>$</span>
-            `;
-      accountsContainer.appendChild(accountDiv);
+    accounts.forEach((account, index) => {
       total += account.balance;
+
+      const div = document.createElement("div");
+      div.className = "account";
+
+      const nameSpan = document.createElement("span");
+      nameSpan.className = "account-name";
+      nameSpan.innerHTML = `<strong>${
+        account.name
+      }</strong><br><span class="balance">$${account.balance.toFixed(
+        2
+      )}</span>`;
+
+      const buttonContainer = document.createElement("div");
+      buttonContainer.className = "account-buttons";
+
+      const plusBtn = document.createElement("button");
+      plusBtn.textContent = "+";
+      plusBtn.onclick = () => {
+        const input = prompt(`Add amount to ${account.name}:`);
+        const amount = parseFloat(input);
+        if (!isNaN(amount)) changeBalance(index, amount);
+      };
+
+      const minusBtn = document.createElement("button");
+      minusBtn.textContent = "−";
+      minusBtn.className = "minus";
+      minusBtn.onclick = () => {
+        const input = prompt(`Subtract amount from ${account.name}:`);
+        const amount = parseFloat(input);
+        if (!isNaN(amount)) changeBalance(index, -amount);
+      };
+
+      buttonContainer.appendChild(plusBtn);
+      buttonContainer.appendChild(minusBtn);
+
+      div.appendChild(nameSpan);
+      div.appendChild(buttonContainer);
+      accountsContainer.appendChild(div);
     });
 
-    document.getElementById("total").textContent = total;
+    document.getElementById("total").textContent = total.toFixed(2);
   } catch (error) {
     console.error("Error loading accounts:", error);
   }
