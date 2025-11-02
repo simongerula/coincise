@@ -6,6 +6,18 @@ function getAuthHeaders() {
   };
 }
 
+function getLastSixMonths() {
+  const months = [];
+  const today = new Date();
+
+  for (let i = 5; i >= 0; i--) {
+    const date = new Date(today.getFullYear(), today.getMonth() - i, 1);
+    months.push(date.toLocaleString("default", { month: "short" }));
+  }
+
+  return months;
+}
+
 async function loadAccounts() {
   const token = localStorage.getItem("auth_token");
   if (!token) {
@@ -124,6 +136,9 @@ async function loadAccounts() {
     });
 
     document.getElementById("total").textContent = total.toFixed(2);
+
+    // Update the chart with the new total
+    updateWorthChart(total);
   } catch (error) {
     console.error("Error loading accounts:", error);
     document.getElementById("accounts").innerHTML = `
@@ -132,6 +147,58 @@ async function loadAccounts() {
   } finally {
     loader.style.display = "none";
   }
+}
+
+// Add this function to create/update the chart
+function updateWorthChart(currentTotal) {
+  const ctx = document.getElementById("worthChart");
+
+  // If chart exists, destroy it before creating a new one
+  if (window.worthLineChart) {
+    window.worthLineChart.destroy();
+  }
+
+  const months = getLastSixMonths();
+  const data = new Array(5).fill(null); // First 5 months are null
+  data.push(currentTotal); // Add current month's total
+
+  window.worthLineChart = new Chart(ctx, {
+    type: "line",
+    data: {
+      labels: months,
+      datasets: [
+        {
+          label: "Total Worth",
+          data: data,
+          borderColor: "rgb(75, 192, 192)",
+          tension: 0.1,
+          fill: false,
+        },
+      ],
+    },
+    options: {
+      responsive: true,
+      scales: {
+        y: {
+          beginAtZero: true,
+          ticks: {
+            callback: function (value) {
+              return "$" + value.toFixed(2);
+            },
+          },
+        },
+      },
+      plugins: {
+        tooltip: {
+          callbacks: {
+            label: function (context) {
+              return "$" + context.parsed.y.toFixed(2);
+            },
+          },
+        },
+      },
+    },
+  });
 }
 
 // Add this helper function
