@@ -1,3 +1,32 @@
+async function loadAccounts() {
+  try {
+    const response = await fetch(
+      "https://coincise-api.simongerula.workers.dev/assets/"
+    );
+    const accounts = await response.json();
+
+    const accountsContainer = document.getElementById("accounts");
+    accountsContainer.innerHTML = ""; // Clear existing accounts
+
+    let total = 0;
+    accounts.forEach((account) => {
+      const accountDiv = document.createElement("div");
+      accountDiv.className = "account";
+      accountDiv.innerHTML = `
+                <input type="text" value="${account.name}" readonly>
+                <input type="number" value="${account.balance}" readonly>
+                <span>$</span>
+            `;
+      accountsContainer.appendChild(accountDiv);
+      total += account.balance;
+    });
+
+    document.getElementById("total").textContent = total;
+  } catch (error) {
+    console.error("Error loading accounts:", error);
+  }
+}
+
 let accounts = [];
 
 function updateDisplay() {
@@ -99,5 +128,7 @@ function changeBalance(index, amount) {
   accounts[index].balance += amount;
   updateDisplay();
 }
+
+document.addEventListener("DOMContentLoaded", loadAccounts);
 
 updateDisplay();
