@@ -54,7 +54,7 @@ async function addAccount() {
 
   const balanceStr = prompt("Initial balance:");
   const balance = parseFloat(balanceStr);
-  if (isNaN(totalValue)) return alert("Invalid balance");
+  if (isNaN(balance)) return alert("Invalid balance");
 
   const newAccount = {
     id: Date.now(),
