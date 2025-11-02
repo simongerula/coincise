@@ -49,9 +49,9 @@ async function loadAccounts() {
       minusBtn.textContent = "−";
       minusBtn.className = "minus";
 
-      buttonContainer.appendChild(checkbox);
       buttonContainer.appendChild(plusBtn);
       buttonContainer.appendChild(minusBtn);
+      buttonContainer.appendChild(checkbox);
 
       div.appendChild(nameSpan);
       div.appendChild(buttonContainer);
