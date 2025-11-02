@@ -226,3 +226,23 @@ button.minus:hover {
 .total-card h2 {
   margin: 0;
 }
+
+.auth-card {
+  background: white;
+  border-radius: 8px;
+  padding: 20px;
+  text-align: center;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  margin: 20px auto;
+  max-width: 400px;
+}
+
+.auth-card h2 {
+  margin: 0 0 10px 0;
+  color: #333;
+}
+
+.auth-card p {
+  margin: 0;
+  color: #666;
+}

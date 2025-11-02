@@ -1,11 +1,28 @@
 async function loadAccounts() {
+  const token = localStorage.getItem("auth_token");
+  if (!token) {
+    showLoginCard();
+    return;
+  }
+
   const loader = document.querySelector(".loader-container") || createLoader();
   loader.style.display = "flex";
 
   try {
     const response = await fetch(
-      "https://coincise-api.simongerula.workers.dev/assets/"
+      "https://coincise-api.simongerula.workers.dev/assets/",
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
     );
+
+    if (response.status === 403 || response.status === 401) {
+      localStorage.removeItem("auth_token");
+      showLoginCard();
+      return;
+    }
 
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
@@ -217,6 +234,16 @@ function changeBalance(index, amount) {
     }
     loadAccounts();
   });
+}
+
+function showLoginCard() {
+  const container = document.getElementById("accounts");
+  container.innerHTML = `
+    <div class="auth-card">
+      <h2>Authentication Required</h2>
+      <p>Please log in to view your accounts</p>
+    </div>
+  `;
 }
 
 document.addEventListener("DOMContentLoaded", loadAccounts);
