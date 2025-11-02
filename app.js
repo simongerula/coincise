@@ -1,4 +1,7 @@
 async function loadAccounts() {
+  const loader = document.querySelector(".loader-container") || createLoader();
+  loader.style.display = "flex";
+
   try {
     const response = await fetch(
       "https://coincise-api.simongerula.workers.dev/assets/"
@@ -60,58 +63,24 @@ async function loadAccounts() {
     document.getElementById("accounts").innerHTML = `
       <div class="error">Failed to load accounts. Please try again later.</div>
     `;
+  } finally {
+    loader.style.display = "none";
   }
 }
 
-// let accounts = [];
+// Add this helper function
+function createLoader() {
+  const container = document.createElement("div");
+  container.className = "loader-container";
 
-// function updateDisplay() {
-//   const container = document.getElementById("accounts");
-//   container.innerHTML = "";
-//   let total = 0;
+  const spinner = document.createElement("div");
+  spinner.className = "loader";
 
-//   accounts.forEach((acc, index) => {
-//     total += acc.balance;
+  container.appendChild(spinner);
+  document.body.appendChild(container);
 
-//     const div = document.createElement("div");
-//     div.className = "account";
-
-//     const nameSpan = document.createElement("span");
-//     nameSpan.className = "account-name";
-//     nameSpan.innerHTML = `<strong>${
-//       acc.name
-//     }</strong><br><span class="balance">$${acc.balance.toFixed(2)}</span>`;
-
-//     const buttonContainer = document.createElement("div");
-//     buttonContainer.className = "account-buttons";
-
-//     const plusBtn = document.createElement("button");
-//     plusBtn.textContent = "+";
-//     plusBtn.onclick = () => {
-//       const input = prompt(`Add amount to ${acc.name}:`);
-//       const amount = parseFloat(input);
-//       if (!isNaN(amount)) changeBalance(index, amount);
-//     };
-
-//     const minusBtn = document.createElement("button");
-//     minusBtn.textContent = "−";
-//     minusBtn.className = "minus";
-//     minusBtn.onclick = () => {
-//       const input = prompt(`Subtract amount from ${acc.name}:`);
-//       const amount = parseFloat(input);
-//       if (!isNaN(amount)) changeBalance(index, -amount);
-//     };
-
-//     buttonContainer.appendChild(plusBtn);
-//     buttonContainer.appendChild(minusBtn);
-
-//     div.appendChild(nameSpan);
-//     div.appendChild(buttonContainer);
-//     container.appendChild(div);
-//   });
-
-//   document.getElementById("total").textContent = total.toFixed(2);
-// }
+  return container;
+}
 
 async function addAccount() {
   const name = prompt("Enter account name:");
@@ -198,5 +167,3 @@ function changeBalance(index, amount) {
 }
 
 document.addEventListener("DOMContentLoaded", loadAccounts);
-
-// updateDisplay();
