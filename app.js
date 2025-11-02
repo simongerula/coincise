@@ -146,18 +146,34 @@ async function addAccount() {
       throw new Error("Network response was not ok");
     }
 
-    accounts.push(newAccount);
-    updateDisplay();
+    await loadAccounts(); // Replace updateDisplay with loadAccounts
   } catch (error) {
     console.error("Error adding account:", error);
     alert("Failed to add account. Please try again.");
   }
 }
 
-function removeAccount() {
+async function removeAccount() {
   if (accounts.length === 0) return alert("No accounts to remove");
-  accounts.pop();
-  updateDisplay();
+
+  try {
+    const lastAccount = accounts[accounts.length - 1];
+    const response = await fetch(
+      `https://coincise-api.simongerula.workers.dev/assets/${lastAccount.id}`,
+      {
+        method: "DELETE",
+      }
+    );
+
+    if (!response.ok) {
+      throw new Error("Network response was not ok");
+    }
+
+    await loadAccounts(); // Replace updateDisplay with loadAccounts
+  } catch (error) {
+    console.error("Error removing account:", error);
+    alert("Failed to remove account. Please try again.");
+  }
 }
 
 function changeBalance(index, amount) {
