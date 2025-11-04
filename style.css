@@ -270,7 +270,6 @@ button.minus:hover {
   color: #00b38b;
 }
 
-/* Header at the top */
 .header {
   display: flex;
   justify-content: space-between;
@@ -278,7 +277,18 @@ button.minus:hover {
   margin-bottom: 1rem;
 }
 
-/* Logo text */
+.logo-container {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.logo-img {
+  width: 32px;
+  height: 32px;
+  border-radius: 6px;
+}
+
 .logo {
   font-size: 1.5rem;
   font-weight: 700;
