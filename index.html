@@ -8,17 +8,26 @@
   </head>
   <body>
     <div class="container">
+      <div class="header">
+        <h1 class="logo">Coincise</h1>
+        <button class="icon-button" onclick="createAccount()">➕</button>
+      </div>
+
       <div class="chart">
         <canvas id="worthChart"></canvas>
       </div>
+
       <div class="total-card">
         <h2>Total worth: $<span id="total">0</span></h2>
       </div>
+
       <div class="action-buttons">
-        <button onclick="addAccount()">Add account</button>
+        <button onclick="addAccount()">Add Asset</button>
       </div>
+
       <div id="accounts"></div>
     </div>
+
     <script src="app.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   </body>
