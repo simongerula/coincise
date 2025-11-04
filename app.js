@@ -285,6 +285,14 @@ function changeBalance(index, amount) {
 }
 
 function showLoginCard() {
+  const chart = document.querySelector(".chart");
+  const actionButtons = document.querySelector(".action-buttons");
+  const totalCard = document.querySelector(".total-card");
+
+  if (chart) chart.style.display = "none";
+  if (actionButtons) actionButtons.style.display = "none";
+  if (totalCard) totalCard.style.display = "none";
+
   const container = document.getElementById("accounts");
   container.innerHTML = `
     <div class="auth-card">
