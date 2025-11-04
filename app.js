@@ -305,42 +305,77 @@ function showLoginCard() {
         to view your accounts.
       </p>
     </div>
+
+    <!-- Modal -->
+    <div id="loginModal" class="modal hidden">
+      <div class="modal-content">
+        <h3>Log In</h3>
+        <form id="loginForm">
+          <label>
+            Username:
+            <input type="text" id="loginUsername" required />
+          </label>
+          <label>
+            Password:
+            <input type="password" id="loginPassword" required />
+          </label>
+          <div class="modal-buttons">
+            <button type="submit" class="btn-primary">Log In</button>
+            <button type="button" id="closeModal" class="btn-secondary">Cancel</button>
+          </div>
+        </form>
+      </div>
+    </div>
   `;
 
-  container
-    .querySelector(".login-link")
-    .addEventListener("click", async (e) => {
-      e.preventDefault();
-      const username = prompt("Please enter username:");
-      if (!username) return;
+  const loginLink = container.querySelector("#loginLink");
+  const modal = container.querySelector("#loginModal");
+  const closeModal = container.querySelector("#closeModal");
+  const loginForm = container.querySelector("#loginForm");
 
-      const password = prompt("Please enter password:");
-      if (!password) return;
+  // Open modal when "log in" is clicked
+  loginLink.addEventListener("click", (e) => {
+    e.preventDefault();
+    modal.classList.remove("hidden");
+  });
 
-      try {
-        const response = await fetch(
-          "https://coincise-api.simongerula.workers.dev/auth",
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({ username, password }),
-          }
-        );
+  // Close modal
+  closeModal.addEventListener("click", () => {
+    modal.classList.add("hidden");
+  });
 
-        if (response.status === 201) {
-          const data = await response.json();
-          localStorage.setItem("auth_token", data.token);
-          loadAccounts();
-        } else {
-          alert("Invalid credentials. Please try again.");
+  // Handle form submit
+  loginForm.addEventListener("submit", async (e) => {
+    e.preventDefault();
+
+    const username = document.getElementById("loginUsername").value.trim();
+    const password = document.getElementById("loginPassword").value.trim();
+
+    if (!username || !password) return alert("Please enter both fields");
+
+    try {
+      const response = await fetch(
+        "https://coincise-api.simongerula.workers.dev/auth",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ username, password }),
         }
-      } catch (error) {
-        console.error("Authentication error:", error);
-        alert("Login failed. Please try again later.");
+      );
+
+      if (response.status === 201) {
+        const data = await response.json();
+        localStorage.setItem("auth_token", data.token);
+        modal.classList.add("hidden");
+        loadAccounts();
+      } else {
+        alert("Invalid credentials. Please try again.");
       }
-    });
+    } catch (error) {
+      console.error("Authentication error:", error);
+      alert("Login failed. Please try again later.");
+    }
+  });
 }
 
 document.addEventListener("DOMContentLoaded", loadAccounts);
