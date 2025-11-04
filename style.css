@@ -283,24 +283,3 @@ button.minus:hover {
   color: #00c49a;
   letter-spacing: 1px;
 }
-
-/* Icon button (top-right) */
-.icon-button {
-  background: none;
-  border: none;
-  color: #e0e0e0;
-  font-size: 1.6rem;
-  cursor: pointer;
-  transition: color 0.2s ease, transform 0.2s ease;
-  border-radius: 50%;
-  width: 36px;
-  height: 36px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.icon-button:hover {
-  color: #00c49a;
-  transform: scale(1.1);
-}

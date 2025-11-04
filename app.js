@@ -289,7 +289,13 @@ function showLoginCard() {
   container.innerHTML = `
     <div class="auth-card">
       <h2>Authentication Required</h2>
-      <p>Please <a href="#" class="login-link">log in</a> to view your accounts</p>
+      <p>
+        Please 
+        <a href="#" class="login-link" id="loginLink">log in</a> 
+        or 
+        <a href="#" class="signup-link" id="signupLink">sign up</a>
+        to view your accounts.
+      </p>
     </div>
   `;
 
