@@ -20,6 +20,7 @@ function getLastSixMonths() {
 
 async function loadAccounts() {
   const token = localStorage.getItem("auth_token");
+  const accountId = localStorage.getItem("account_id");
   if (!token) {
     showLoginCard();
     return;
@@ -123,6 +124,10 @@ async function loadAccounts() {
         }
       };
 
+      if (accountId) {
+        loadWorthHistory(accountId);
+      }
+
       dropdown.appendChild(addAction);
       dropdown.appendChild(subtractAction);
       dropdown.appendChild(deleteAction);
@@ -149,18 +154,56 @@ async function loadAccounts() {
   }
 }
 
-// Add this function to create/update the chart
-function updateWorthChart(currentTotal) {
+async function loadWorthHistory(accountId) {
+  try {
+    const token = localStorage.getItem("auth_token");
+
+    const response = await fetch(
+      `https://coincise-api.simongerula.workers.dev/worth-history?accountId=${accountId}`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    if (!response.ok) throw new Error("Failed to load worth history");
+
+    const history = await response.json();
+
+    // Sort chronologically just in case
+    const sorted = history.sort((a, b) => a.period.localeCompare(b.period));
+
+    // Extract months and worth values
+    const months = sorted.map((item) => formatMonthLabel(item.period));
+    const data = sorted.map((item) => item.worth);
+
+    updateWorthChart(data, months);
+  } catch (error) {
+    console.error("Error loading worth history:", error);
+  }
+}
+
+// Helper to format YYYY-MM → "Nov 2025"
+function formatMonthLabel(period) {
+  const [year, month] = period.split("-");
+  const date = new Date(Number(year), Number(month) - 1);
+  return date.toLocaleString("default", { month: "short", year: "numeric" });
+}
+
+function updateWorthChart(data, months) {
   const ctx = document.getElementById("worthChart");
 
-  // If chart exists, destroy it before creating a new one
+  // Destroy existing chart if any
   if (window.worthLineChart) {
     window.worthLineChart.destroy();
   }
 
-  const months = getLastSixMonths();
-  const data = new Array(5).fill(null); // First 5 months are null
-  data.push(currentTotal); // Add current month's total
+  // Guard against missing or empty data
+  if (!data || !data.length) {
+    console.warn("No worth data available to plot.");
+    return;
+  }
 
   window.worthLineChart = new Chart(ctx, {
     type: "line",
@@ -168,20 +211,22 @@ function updateWorthChart(currentTotal) {
       labels: months,
       datasets: [
         {
-          label: "", // Removed the "Total Worth" label
+          label: "Total Worth",
           data: data,
           borderColor: "rgb(75, 192, 192)",
-          tension: 0.1,
+          tension: 0.3,
           fill: false,
+          pointRadius: 4,
+          pointHoverRadius: 6,
         },
       ],
     },
     options: {
       responsive: true,
-      maintainAspectRatio: true, // Changed to true
+      maintainAspectRatio: true,
       plugins: {
         legend: {
-          display: false, // Hide the legend completely
+          display: false,
         },
         tooltip: {
           callbacks: {
@@ -198,6 +243,12 @@ function updateWorthChart(currentTotal) {
             callback: function (value) {
               return "$" + value.toFixed(2);
             },
+          },
+        },
+        x: {
+          ticks: {
+            maxRotation: 0,
+            minRotation: 0,
           },
         },
       },
@@ -366,6 +417,7 @@ function showLoginCard() {
       if (response.status === 201) {
         const data = await response.json();
         localStorage.setItem("auth_token", data.token);
+        localStorage.setItem("account_id", data.accountId);
         modal.classList.add("hidden");
 
         if (chart) chart.style.display = "block";
