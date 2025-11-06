@@ -367,6 +367,11 @@ function showLoginCard() {
         const data = await response.json();
         localStorage.setItem("auth_token", data.token);
         modal.classList.add("hidden");
+
+        if (chart) chart.style.display = "block";
+        if (actionButtons) actionButtons.style.display = "block";
+        if (totalCard) totalCard.style.display = "block";
+
         loadAccounts();
       } else {
         alert("Invalid credentials. Please try again.");
