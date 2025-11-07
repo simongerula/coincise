@@ -357,7 +357,7 @@ function showLoginCard() {
       </p>
     </div>
 
-    <!-- Modal -->
+    <!-- Login Modal -->
     <div id="loginModal" class="modal hidden">
       <div class="modal-content">
         <h3>Log In</h3>
@@ -372,7 +372,32 @@ function showLoginCard() {
           </label>
           <div class="modal-buttons">
             <button type="submit" class="btn-primary">Log In</button>
-            <button type="button" id="closeModal" class="btn-secondary">Cancel</button>
+            <button type="button" id="closeLoginModal" class="btn-secondary">Cancel</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- Signup Modal -->
+    <div id="signupModal" class="modal hidden">
+      <div class="modal-content">
+        <h3>Sign Up</h3>
+        <form id="signupForm">
+          <label>
+            Email:
+            <input type="email" id="signupEmail" required />
+          </label>
+          <label>
+            Username:
+            <input type="text" id="signupUsername" required />
+          </label>
+          <label>
+            Password:
+            <input type="password" id="signupPassword" required />
+          </label>
+          <div class="modal-buttons">
+            <button type="submit" class="btn-primary">Sign Up</button>
+            <button type="button" id="closeSignupModal" class="btn-secondary">Cancel</button>
           </div>
         </form>
       </div>
@@ -380,22 +405,37 @@ function showLoginCard() {
   `;
 
   const loginLink = container.querySelector("#loginLink");
-  const modal = container.querySelector("#loginModal");
-  const closeModal = container.querySelector("#closeModal");
-  const loginForm = container.querySelector("#loginForm");
+  const signupLink = container.querySelector("#signupLink");
 
-  // Open modal when "log in" is clicked
+  const loginModal = container.querySelector("#loginModal");
+  const signupModal = container.querySelector("#signupModal");
+
+  const closeLoginModal = container.querySelector("#closeLoginModal");
+  const closeSignupModal = container.querySelector("#closeSignupModal");
+
+  const loginForm = container.querySelector("#loginForm");
+  const signupForm = container.querySelector("#signupForm");
+
+  // Open modals
   loginLink.addEventListener("click", (e) => {
     e.preventDefault();
-    modal.classList.remove("hidden");
+    loginModal.classList.remove("hidden");
   });
 
-  // Close modal
-  closeModal.addEventListener("click", () => {
-    modal.classList.add("hidden");
+  signupLink.addEventListener("click", (e) => {
+    e.preventDefault();
+    signupModal.classList.remove("hidden");
   });
 
-  // Handle form submit
+  // Close modals
+  closeLoginModal.addEventListener("click", () => {
+    loginModal.classList.add("hidden");
+  });
+  closeSignupModal.addEventListener("click", () => {
+    signupModal.classList.add("hidden");
+  });
+
+  // Log in
   loginForm.addEventListener("submit", async (e) => {
     e.preventDefault();
 
@@ -418,7 +458,7 @@ function showLoginCard() {
         const data = await response.json();
         localStorage.setItem("auth_token", data.token);
         localStorage.setItem("account_id", data.accountId);
-        modal.classList.add("hidden");
+        loginModal.classList.add("hidden");
 
         if (chart) chart.style.display = "block";
         if (actionButtons) actionButtons.style.display = "block";
@@ -431,6 +471,48 @@ function showLoginCard() {
     } catch (error) {
       console.error("Authentication error:", error);
       alert("Login failed. Please try again later.");
+    }
+  });
+
+  // Sign up
+  signupForm.addEventListener("submit", async (e) => {
+    e.preventDefault();
+
+    const email = document.getElementById("signupEmail").value.trim();
+    const username = document.getElementById("signupUsername").value.trim();
+    const password = document.getElementById("signupPassword").value.trim();
+
+    if (!email || !username || !password)
+      return alert("All fields are required");
+
+    try {
+      const response = await fetch(
+        "https://coincise-api.simongerula.workers.dev/signup",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email, username, password }),
+        }
+      );
+
+      if (response.status === 201) {
+        const data = await response.json();
+        localStorage.setItem("auth_token", data.token);
+        localStorage.setItem("account_id", data.accountId);
+        signupModal.classList.add("hidden");
+
+        if (chart) chart.style.display = "block";
+        if (actionButtons) actionButtons.style.display = "block";
+        if (totalCard) totalCard.style.display = "block";
+
+        loadAccounts();
+      } else {
+        const msg = await response.text();
+        alert("Signup failed: " + msg);
+      }
+    } catch (error) {
+      console.error("Signup error:", error);
+      alert("Signup failed. Please try again later.");
     }
   });
 }
