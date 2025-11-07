@@ -382,3 +382,20 @@ button.minus:hover {
     transform: scale(1);
   }
 }
+
+.success-card {
+  background: #e6ffed;
+  border: 1px solid #b5e8c7;
+  color: #1b5e20;
+  border-radius: 8px;
+  padding: 12px 16px;
+  margin-bottom: 10px;
+  font-size: 0.95rem;
+  text-align: center;
+}
+
+.success-card a {
+  color: #1b5e20;
+  font-weight: bold;
+  text-decoration: underline;
+}

@@ -496,16 +496,28 @@ function showLoginCard() {
       );
 
       if (response.status === 201) {
-        const data = await response.json();
-        localStorage.setItem("auth_token", data.token);
-        localStorage.setItem("account_id", data.accountId);
+        // Hide signup modal
         signupModal.classList.add("hidden");
 
-        if (chart) chart.style.display = "block";
-        if (actionButtons) actionButtons.style.display = "block";
-        if (totalCard) totalCard.style.display = "block";
+        // ✅ Show success card above "Authentication Required"
+        const authCard = document.querySelector(".auth-card");
+        const successCard = document.createElement("div");
+        successCard.className = "success-card";
+        successCard.innerHTML = `
+        <div class="success-message">
+          ✅ Account created successfully! You can now <a href="#" id="openLoginFromSuccess">log in</a>.
+        </div>
+      `;
 
-        loadAccounts();
+        authCard.parentNode.insertBefore(successCard, authCard);
+
+        // Attach listener to open login modal directly
+        const openLogin = successCard.querySelector("#openLoginFromSuccess");
+        openLogin.addEventListener("click", (ev) => {
+          ev.preventDefault();
+          successCard.remove(); // remove success message
+          loginModal.classList.remove("hidden");
+        });
       } else {
         const msg = await response.text();
         alert("Signup failed: " + msg);
