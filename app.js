@@ -143,7 +143,7 @@ async function loadAccounts() {
 
     if (accountId) {
       await loadWorthHistory(accountId);
-      await loadWorthChange();
+      //   await loadWorthChange();
     }
   } catch (error) {
     console.error("Error loading accounts:", error);
@@ -156,15 +156,15 @@ async function loadAccounts() {
 }
 
 async function loadWorthHistory(accountId) {
+  const accountId = localStorage.getItem("account_id");
+  if (!accountId) return;
   try {
     const token = localStorage.getItem("auth_token");
 
     const response = await fetch(
       `https://coincise-api.simongerula.workers.dev/worth-history?accountId=${accountId}`,
       {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
+        headers: getAuthHeaders(),
       }
     );
 
@@ -172,6 +172,8 @@ async function loadWorthHistory(accountId) {
 
     const data = await response.json();
     const history = data.history || []; // ✅ Extract from object
+    const change = data.changePercent;
+    const worthChangeEl = document.getElementById("worthChange");
 
     // Sort chronologically just in case
     const sorted = history.sort((a, b) => a.period.localeCompare(b.period));
@@ -180,42 +182,51 @@ async function loadWorthHistory(accountId) {
     const months = sorted.map((item) => formatMonthLabel(item.period));
     const values = sorted.map((item) => item.worth);
 
+    if (change !== null) {
+      const formatted = change.toFixed(1) + "%";
+      worthChangeEl.textContent =
+        (change >= 0 ? "+" : "") + formatted + " since last month";
+      worthChangeEl.style.color = change >= 0 ? "green" : "red";
+    } else {
+      worthChangeEl.textContent = "";
+    }
+
     updateWorthChart(values, months);
   } catch (error) {
     console.error("Error loading worth history:", error);
   }
 }
 
-async function loadWorthChange() {
-  const accountId = localStorage.getItem("account_id");
-  if (!accountId) return;
+// async function loadWorthChange() {
+//   //   const accountId = localStorage.getItem("account_id");
+//   //   if (!accountId) return;
 
-  const res = await fetch(
-    `https://coincise-api.simongerula.workers.dev/worth-history?accountId=${accountId}`,
-    {
-      headers: getAuthHeaders(),
-    }
-  );
+//   //   const res = await fetch(
+//   //     `https://coincise-api.simongerula.workers.dev/worth-history?accountId=${accountId}`,
+//   //     {
+//   //       headers: getAuthHeaders(),
+//   //     }
+//   //   );
 
-  if (!res.ok) return;
-  const data = await res.json();
+//   //   if (!res.ok) return;
+//   //   const data = await res.json();
 
-  const change = data.changePercent;
-  const worthChangeEl = document.getElementById("worthChange");
+//   const change = data.changePercent;
+//   const worthChangeEl = document.getElementById("worthChange");
 
-  if (change !== null) {
-    const formatted = change.toFixed(1) + "%";
-    worthChangeEl.textContent =
-      (change >= 0 ? "+" : "") + formatted + " since last month";
-    worthChangeEl.style.color = change >= 0 ? "green" : "red";
-  } else {
-    worthChangeEl.textContent = "";
-  }
+//   if (change !== null) {
+//     const formatted = change.toFixed(1) + "%";
+//     worthChangeEl.textContent =
+//       (change >= 0 ? "+" : "") + formatted + " since last month";
+//     worthChangeEl.style.color = change >= 0 ? "green" : "red";
+//   } else {
+//     worthChangeEl.textContent = "";
+//   }
 
-  // Also update chart
-  const currentTotal = data.history[data.history.length - 1].worth;
-  updateWorthChart(currentTotal);
-}
+//   // Also update chart
+//   const currentTotal = data.history[data.history.length - 1].worth;
+//   updateWorthChart(currentTotal);
+// }
 
 // Helper to format YYYY-MM → "Nov 2025"
 function formatMonthLabel(period) {
