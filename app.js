@@ -69,7 +69,7 @@ async function loadAccounts() {
       const buttonContainer = document.createElement("div");
       buttonContainer.className = "account-buttons";
 
-      // Create kebab button and dropdown
+      // kebab dropdown menu
       const kebabBtn = document.createElement("button");
       kebabBtn.className = "kebab-menu";
       kebabBtn.innerHTML = "⋮";
@@ -78,7 +78,7 @@ async function loadAccounts() {
         const dropdown = kebabBtn.nextElementSibling;
         dropdown.classList.toggle("show");
 
-        // Close other open dropdowns
+        // Close other dropdowns
         document.querySelectorAll(".dropdown-content.show").forEach((menu) => {
           if (menu !== dropdown) menu.classList.remove("show");
         });
@@ -124,11 +124,6 @@ async function loadAccounts() {
         }
       };
 
-      if (accountId) {
-        loadWorthHistory(accountId);
-        loadWorthChange();
-      }
-
       dropdown.appendChild(addAction);
       dropdown.appendChild(subtractAction);
       dropdown.appendChild(deleteAction);
@@ -143,8 +138,13 @@ async function loadAccounts() {
 
     document.getElementById("total").textContent = total.toFixed(2);
 
-    // Update the chart with the new total
+    // 🟩 Move these *after* DOM updates
     updateWorthChart(total);
+
+    if (accountId) {
+      await loadWorthHistory(accountId);
+      await loadWorthChange();
+    }
   } catch (error) {
     console.error("Error loading accounts:", error);
     document.getElementById("accounts").innerHTML = `
