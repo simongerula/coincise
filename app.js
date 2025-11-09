@@ -156,7 +156,7 @@ async function loadAccounts() {
 }
 
 async function loadWorthHistory(accountId) {
-  const accountId = localStorage.getItem("account_id");
+  //const accountId = localStorage.getItem("account_id");
   if (!accountId) return;
   try {
     const token = localStorage.getItem("auth_token");
