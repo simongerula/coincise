@@ -184,6 +184,37 @@ async function loadWorthHistory(accountId) {
   }
 }
 
+async function loadWorthChange() {
+  const accountId = localStorage.getItem("account_id");
+  if (!accountId) return;
+
+  const res = await fetch(
+    `https://coincise-api.simongerula.workers.dev/worth-history?accountId=${accountId}`,
+    {
+      headers: getAuthHeaders(),
+    }
+  );
+
+  if (!res.ok) return;
+  const data = await res.json();
+
+  const change = data.changePercent;
+  const worthChangeEl = document.getElementById("worthChange");
+
+  if (change !== null) {
+    const formatted = change.toFixed(1) + "%";
+    worthChangeEl.textContent =
+      (change >= 0 ? "+" : "") + formatted + " since last month";
+    worthChangeEl.style.color = change >= 0 ? "green" : "red";
+  } else {
+    worthChangeEl.textContent = "";
+  }
+
+  // Also update chart
+  const currentTotal = data.history[data.history.length - 1].worth;
+  updateWorthChart(currentTotal);
+}
+
 // Helper to format YYYY-MM → "Nov 2025"
 function formatMonthLabel(period) {
   const [year, month] = period.split("-");
