@@ -170,16 +170,17 @@ async function loadWorthHistory(accountId) {
 
     if (!response.ok) throw new Error("Failed to load worth history");
 
-    const history = await response.json();
+    const data = await response.json();
+    const history = data.history || []; // ✅ Extract from object
 
     // Sort chronologically just in case
     const sorted = history.sort((a, b) => a.period.localeCompare(b.period));
 
     // Extract months and worth values
     const months = sorted.map((item) => formatMonthLabel(item.period));
-    const data = sorted.map((item) => item.worth);
+    const values = sorted.map((item) => item.worth);
 
-    updateWorthChart(data, months);
+    updateWorthChart(values, months);
   } catch (error) {
     console.error("Error loading worth history:", error);
   }
