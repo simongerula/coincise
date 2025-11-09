@@ -126,6 +126,7 @@ async function loadAccounts() {
 
       if (accountId) {
         loadWorthHistory(accountId);
+        loadWorthChange();
       }
 
       dropdown.appendChild(addAction);
