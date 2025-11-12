@@ -44,15 +44,17 @@ async function loadAssets() {
 
     if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
 
-    assets = await response.json();
+    // ✅ Extract both values
+    const data = await response.json();
+    const { assets, totalWorth } = data;
 
     const container = document.getElementById("assets");
     container.innerHTML = "";
-    let total = 0;
+
+    // ✅ Use totalWorth directly
+    const total = totalWorth || 0;
 
     assets.forEach((asset, index) => {
-      total += asset.balance;
-
       const div = document.createElement("div");
       div.className = "asset";
 
@@ -65,14 +67,13 @@ async function loadAssets() {
       const buttonContainer = document.createElement("div");
       buttonContainer.className = "asset-buttons";
 
+      // ✅ Use totalWorth for percentage
       const percent = total > 0 ? (asset.balance / total) * 100 : 0;
 
-      // percentage indicator
       const percentDiv = document.createElement("div");
       percentDiv.className = "asset-percent";
       percentDiv.textContent = `${Math.round(percent)}%`;
 
-      // kebab dropdown menu
       const kebabBtn = document.createElement("button");
       kebabBtn.className = "kebab-menu";
       kebabBtn.innerHTML = "⋮";
@@ -129,7 +130,6 @@ async function loadAssets() {
       dropdown.appendChild(subtractAction);
       dropdown.appendChild(deleteAction);
 
-      // assemble buttons
       buttonContainer.appendChild(percentDiv);
       buttonContainer.appendChild(kebabBtn);
       buttonContainer.appendChild(dropdown);
@@ -139,6 +139,7 @@ async function loadAssets() {
       container.appendChild(div);
     });
 
+    // ✅ Use total from API
     document.getElementById("total").textContent = total.toFixed(2);
     updateWorthChart(total);
 
