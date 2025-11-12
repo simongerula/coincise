@@ -73,16 +73,20 @@ async function loadAssets() {
       // ✅ Use totalWorth for percentage
       const percent = total > 0 ? (asset.balance / total) * 100 : 0;
 
-      const percentContainer = document.createElement("div");
-      percentContainer.className = "asset-percent-container";
-
       const percentDiv = document.createElement("div");
       percentDiv.className = "asset-percent";
-      percentDiv.textContent = `${Math.round(percent)}%`;
+      //   percentDiv.innerHTML = `<img src="/src/pie-chart-icon.svg" alt="Pie Chart" class="icon-pie" />${Math.round(
+      //     percent
+      //   )}%`;
 
       const pieIcon = document.createElement("img");
       pieIcon.src = "/src/pie-chart-icon.svg";
       pieIcon.className = "icon-pie";
+
+      percentDiv.appendChild(pieIcon);
+      percentDiv.appendChild(
+        document.createTextNode(`${Math.round(percent)}%`)
+      );
 
       const kebabBtn = document.createElement("button");
       kebabBtn.className = "kebab-menu";
@@ -136,14 +140,11 @@ async function loadAssets() {
         }
       };
 
-      percentContainer.appendChild(pieIcon);
-      percentContainer.appendChild(percentDiv);
-
       dropdown.appendChild(addAction);
       dropdown.appendChild(subtractAction);
       dropdown.appendChild(deleteAction);
 
-      buttonContainer.appendChild(percentContainer);
+      buttonContainer.appendChild(percentDiv);
       buttonContainer.appendChild(kebabBtn);
       buttonContainer.appendChild(dropdown);
 

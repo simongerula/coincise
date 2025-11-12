@@ -421,6 +421,9 @@ button.minus:hover {
 }
 
 .asset-percent {
+  display: inline-flex; /* make it a flex container */
+  align-items: center; /* vertically center icon + text */
+  justify-content: center; /* optional, center text */
   font-size: 0.95rem;
   font-weight: 600;
   color: #00c49a;
@@ -429,16 +432,14 @@ button.minus:hover {
   border-radius: 6px;
   padding: 4px 8px;
   margin-right: 0.4rem;
-  align-self: center;
   min-width: 48px;
   text-align: center;
+  gap: 4px; /* space between icon and text */
 }
 
 .icon-pie {
   width: 16px;
   height: 16px;
-  vertical-align: middle;
-  margin-right: 6px;
   opacity: 0.9;
   transition: transform 0.2s ease, filter 0.3s ease;
   filter: invert(92%) sepia(5%) saturate(85%) hue-rotate(180deg)
