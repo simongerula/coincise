@@ -65,6 +65,11 @@ async function loadAssets() {
       const buttonContainer = document.createElement("div");
       buttonContainer.className = "asset-buttons";
 
+      // percentage indicator
+      const percentDiv = document.createElement("div");
+      percentDiv.className = "asset-percent";
+      percentDiv.textContent = "+10%"; // 🔥 Hardcoded for now, will use API later
+
       // kebab dropdown menu
       const kebabBtn = document.createElement("button");
       kebabBtn.className = "kebab-menu";
@@ -121,8 +126,12 @@ async function loadAssets() {
       dropdown.appendChild(addAction);
       dropdown.appendChild(subtractAction);
       dropdown.appendChild(deleteAction);
+
+      // assemble buttons
+      buttonContainer.appendChild(percentDiv);
       buttonContainer.appendChild(kebabBtn);
       buttonContainer.appendChild(dropdown);
+
       div.appendChild(nameSpan);
       div.appendChild(buttonContainer);
       container.appendChild(div);

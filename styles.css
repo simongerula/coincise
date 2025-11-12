@@ -413,3 +413,17 @@ button.minus:hover {
   margin-top: 4px;
   font-weight: 600;
 }
+
+.asset-percent {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #00c49a; /* same accent as balance */
+  background: rgba(0, 196, 154, 0.1);
+  border: 1px solid rgba(0, 196, 154, 0.2);
+  border-radius: 6px;
+  padding: 4px 8px;
+  margin-right: 0.4rem;
+  align-self: center;
+  min-width: 48px;
+  text-align: center;
+}
