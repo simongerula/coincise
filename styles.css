@@ -438,9 +438,3 @@ button.minus:hover {
   filter: invert(92%) sepia(5%) saturate(85%) hue-rotate(180deg)
     brightness(100%) contrast(90%);
 }
-
-.icon-pie:hover {
-  transform: scale(1.1);
-  filter: invert(74%) sepia(52%) saturate(582%) hue-rotate(120deg)
-    brightness(105%) contrast(95%);
-}
