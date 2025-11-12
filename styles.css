@@ -33,7 +33,7 @@ body {
   background: #1e1e1e;
   border-radius: 10px;
   margin-bottom: 1rem;
-  padding: 0; /* Remove padding */
+  padding: 0;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -41,9 +41,9 @@ body {
 
 canvas#worthChart {
   width: 100% !important;
-  height: 140px !important; /* Match the chart container height */
-  margin: 0; /* Remove margins */
-  padding: 5px; /* Reduce padding */
+  height: 140px !important;
+  margin: 0;
+  padding: 5px;
   background-color: #1e1e1e;
   border-radius: 8px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
@@ -88,8 +88,8 @@ button.minus:hover {
   background-color: #ff3333;
 }
 
-/* Account list */
-.account {
+/* Asset list */
+.asset {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -100,13 +100,13 @@ button.minus:hover {
   border-radius: 8px;
 }
 
-.account-name {
+.asset-name {
   font-weight: 600;
   font-size: 1rem;
   color: #e0e0e0;
 }
 
-.account-buttons {
+.asset-buttons {
   display: flex;
   gap: 0.4rem;
   position: relative;
@@ -125,16 +125,15 @@ button.minus:hover {
   font-size: 1.1rem;
 }
 
-.account-name {
+.asset-name {
   flex: 1;
   font-size: 1rem;
   line-height: 1.4;
 }
 
-.account-checkbox {
-  margin-right: 8px;
-  margin: 0; /* Reset margin */
-  align-self: center; /* Ensure checkbox is centered */
+.asset-checkbox {
+  margin: 0;
+  align-self: center;
 }
 
 .balance {
@@ -238,6 +237,7 @@ button.minus:hover {
   margin: 0;
 }
 
+/* Auth cards and modals */
 .auth-card {
   background: #1e1e1e;
   border-radius: 8px;
@@ -383,6 +383,7 @@ button.minus:hover {
   }
 }
 
+/* Alerts / notifications */
 .success-card {
   background: #e6ffed;
   border: 1px solid #b5e8c7;
@@ -400,6 +401,7 @@ button.minus:hover {
   text-decoration: underline;
 }
 
+/* Worth info section */
 .worth-info {
   display: flex;
   flex-direction: column;
