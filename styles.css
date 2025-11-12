@@ -427,3 +427,13 @@ button.minus:hover {
   min-width: 48px;
   text-align: center;
 }
+
+.icon-pie {
+  width: 14px;
+  height: 14px;
+  vertical-align: middle;
+  margin-right: 4px;
+  opacity: 0.85;
+  filter: invert(73%) sepia(11%) saturate(1645%) hue-rotate(118deg)
+    brightness(95%) contrast(90%);
+}
