@@ -118,11 +118,38 @@ async function loadAssets() {
         }
       };
 
+      // Calculate rounded percentages that sum to 100%
+      const rawPercents = assets.map((a) => (a.balance / total) * 100);
+      const roundedPercents = rawPercents.map(Math.round);
+
+      // Adjust rounding so total adds to 100%
+      let diff = 100 - roundedPercents.reduce((sum, p) => sum + p, 0);
+      while (diff !== 0) {
+        for (let i = 0; i < roundedPercents.length && diff !== 0; i++) {
+          if (diff > 0 && rawPercents[i] % 1 >= 0.5) {
+            roundedPercents[i]++;
+            diff--;
+          } else if (diff < 0 && roundedPercents[i] > 0) {
+            roundedPercents[i]--;
+            diff++;
+          }
+        }
+      }
+
+      // Percentage indicator (left of kebab)
+      const percentSpan = document.createElement("span");
+      percentSpan.className = "asset-percent";
+      percentSpan.textContent = `${roundedPercents[index]}%`;
+
       dropdown.appendChild(addAction);
       dropdown.appendChild(subtractAction);
       dropdown.appendChild(deleteAction);
+
+      // Add elements in order: percentage → kebab menu → dropdown
+      buttonContainer.appendChild(percentSpan);
       buttonContainer.appendChild(kebabBtn);
       buttonContainer.appendChild(dropdown);
+
       div.appendChild(nameSpan);
       div.appendChild(buttonContainer);
       container.appendChild(div);
