@@ -429,11 +429,18 @@ button.minus:hover {
 }
 
 .icon-pie {
-  width: 14px;
-  height: 14px;
+  width: 16px;
+  height: 16px;
   vertical-align: middle;
-  margin-right: 4px;
-  opacity: 0.85;
-  filter: invert(73%) sepia(11%) saturate(1645%) hue-rotate(118deg)
-    brightness(95%) contrast(90%);
+  margin-right: 6px;
+  opacity: 0.9;
+  transition: transform 0.2s ease, filter 0.3s ease;
+  filter: invert(92%) sepia(5%) saturate(85%) hue-rotate(180deg)
+    brightness(100%) contrast(90%);
+}
+
+.icon-pie:hover {
+  transform: scale(1.1);
+  filter: invert(74%) sepia(52%) saturate(582%) hue-rotate(120deg)
+    brightness(105%) contrast(95%);
 }
