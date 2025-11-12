@@ -75,7 +75,9 @@ async function loadAssets() {
 
       const percentDiv = document.createElement("div");
       percentDiv.className = "asset-percent";
-      percentDiv.textContent = `${Math.round(percent)}%`;
+      percentDiv.innerHTML = `<img src="/src/pie-chart-icon.svg" alt="Pie Chart" class="icon-pie" />${Math.round(
+        percent
+      )}%`;
 
       const kebabBtn = document.createElement("button");
       kebabBtn.className = "kebab-menu";
