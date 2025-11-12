@@ -65,10 +65,12 @@ async function loadAssets() {
       const buttonContainer = document.createElement("div");
       buttonContainer.className = "asset-buttons";
 
+      const percent = total > 0 ? (asset.balance / total) * 100 : 0;
+
       // percentage indicator
       const percentDiv = document.createElement("div");
       percentDiv.className = "asset-percent";
-      percentDiv.textContent = "+10%"; // 🔥 Hardcoded for now, will use API later
+      percentDiv.textContent = `${Math.round(percent)}%`;
 
       // kebab dropdown menu
       const kebabBtn = document.createElement("button");

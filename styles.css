@@ -417,7 +417,7 @@ button.minus:hover {
 .asset-percent {
   font-size: 0.95rem;
   font-weight: 600;
-  color: #00c49a; /* same accent as balance */
+  color: #00c49a;
   background: rgba(0, 196, 154, 0.1);
   border: 1px solid rgba(0, 196, 154, 0.2);
   border-radius: 6px;
