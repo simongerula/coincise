@@ -45,14 +45,17 @@ async function loadAssets() {
     if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
 
     // ✅ Extract both values
+    //const data = await response.json();
+    //const { assets, totalWorth } = data;
     const data = await response.json();
-    const { assets, totalWorth } = data;
+    assets = data.assets; // ✅ make sure global assets array is updated
+    const total = data.totalWorth || 0;
 
     const container = document.getElementById("assets");
     container.innerHTML = "";
 
     // ✅ Use totalWorth directly
-    const total = totalWorth || 0;
+    //const total = totalWorth || 0;
 
     assets.forEach((asset, index) => {
       const div = document.createElement("div");
