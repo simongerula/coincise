@@ -414,6 +414,12 @@ button.minus:hover {
   font-weight: 600;
 }
 
+.asset-percent-container {
+  display: flex;
+  align-items: center; /* vertically centers children */
+  justify-content: center; /* optional, keeps text centered */
+}
+
 .asset-percent {
   font-size: 0.95rem;
   font-weight: 600;
