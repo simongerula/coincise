@@ -188,11 +188,32 @@ async function loadWorthHistory(userId) {
     const months = sorted.map((item) => formatMonthLabel(item.period));
     const values = sorted.map((item) => item.worth);
 
-    if (change !== null) {
-      const formatted = change.toFixed(1) + "%";
-      worthChangeEl.textContent =
-        (change >= 0 ? "+" : "") + formatted + " since last month";
+    if (change !== null && values.length >= 2) {
+      const lastWorth = values[values.length - 1];
+      const prevWorth = values[values.length - 2];
+      const absoluteChange = lastWorth - prevWorth;
+
+      const formattedPercent = `${change >= 0 ? "+" : ""}${change.toFixed(
+        1
+      )}% since last month`;
+      const formattedAmount = `${
+        absoluteChange >= 0 ? "+" : ""
+      }$${absoluteChange.toFixed(0)} since last month`;
+
+      // default display → percentage
+      worthChangeEl.textContent = formattedPercent;
       worthChangeEl.style.color = change >= 0 ? "green" : "red";
+
+      // toggle on click
+      let showingPercent = true;
+      worthChangeEl.style.cursor = "pointer";
+      worthChangeEl.title = "Click to toggle between % and $ change";
+      worthChangeEl.onclick = () => {
+        showingPercent = !showingPercent;
+        worthChangeEl.textContent = showingPercent
+          ? formattedPercent
+          : formattedAmount;
+      };
     } else {
       worthChangeEl.textContent = "";
     }
