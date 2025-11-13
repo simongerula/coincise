@@ -414,32 +414,26 @@ button.minus:hover {
   font-weight: 600;
 }
 
-.asset-percent-container {
-  display: flex;
-  align-items: center; /* vertically centers children */
-  justify-content: center; /* optional, keeps text centered */
-}
-
 .asset-percent {
-  display: inline-flex; /* make it a flex container */
-  align-items: center; /* vertically center icon + text */
-  justify-content: center; /* optional, center text */
-  font-size: 0.95rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.85rem; /* smaller text */
   font-weight: 600;
   color: #00c49a;
   background: rgba(0, 196, 154, 0.1);
-  border: 1px solid rgba(0, 196, 154, 0.2);
+  border: 1px solid rgba(0, 196, 154, 0.25);
   border-radius: 6px;
-  padding: 4px 8px;
+  padding: 3px 6px; /* smaller padding */
   margin-right: 0.4rem;
-  min-width: 48px;
+  min-width: 40px; /* slightly narrower pill */
   text-align: center;
-  gap: 4px; /* space between icon and text */
+  gap: 3px; /* tighter spacing between icon and text */
 }
 
 .icon-pie {
-  width: 16px;
-  height: 16px;
+  width: 13px; /* smaller icon */
+  height: 13px;
   opacity: 0.9;
   transition: transform 0.2s ease, filter 0.3s ease;
   filter: invert(92%) sepia(5%) saturate(85%) hue-rotate(180deg)
