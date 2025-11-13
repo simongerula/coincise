@@ -439,3 +439,55 @@ button.minus:hover {
   filter: invert(92%) sepia(5%) saturate(85%) hue-rotate(180deg)
     brightness(100%) contrast(90%);
 }
+
+/* Container for movements under each asset */
+.asset-movements {
+  margin-top: 4px; /* small spacing below the asset card */
+  padding: 6px 12px; /* padding inside the movements container */
+  background-color: #1e1e1e; /* slightly darker than page background */
+  border-left: 3px solid #4caf50; /* accent color for movement section */
+  border-radius: 4px;
+  font-size: 0.9rem;
+  color: #e0e0e0;
+  transition: max-height 0.3s ease, opacity 0.3s ease;
+  overflow: hidden;
+}
+
+/* Each line in the movement list */
+.asset-movements .movement-line {
+  padding: 2px 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.asset-movements .movement-line:last-child {
+  border-bottom: none;
+}
+
+/* Optional: show + for deposits in green, - for withdrawals in red */
+.asset-movements .movement-line::before {
+  content: "";
+  display: inline-block;
+  width: 0;
+  height: 0;
+  margin-right: 4px;
+}
+
+.asset-movements .movement-line[data-type="income"] {
+  color: #4caf50;
+}
+
+.asset-movements .movement-line[data-type="expense"] {
+  color: #f44336;
+}
+
+/* Smooth toggle (optional if you want a slide effect) */
+.asset-movements.show {
+  max-height: 500px; /* arbitrary large value */
+  opacity: 1;
+}
+
+.asset-movements.hide {
+  max-height: 0;
+  opacity: 0;
+  padding: 0 12px; /* collapse horizontal padding too */
+}
