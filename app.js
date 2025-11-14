@@ -594,56 +594,41 @@ function createLoader() {
 //   }
 // }
 async function addAsset() {
-  // Hide chart + buttons just like login
-  const chart = document.querySelector(".chart");
-  const actionButtons = document.querySelector(".action-buttons");
-  const totalCard = document.querySelector(".total-card");
+  // Create modal HTML (does NOT replace your page)
+  const modal = document.createElement("div");
+  modal.id = "addAssetModal";
+  modal.className = "modal";
+  modal.innerHTML = `
+    <div class="modal-content">
+      <h3>Add Asset</h3>
+      <form id="addAssetForm">
+        <label>
+          Asset Name:
+          <input type="text" id="assetNameInput" required />
+        </label>
 
-  if (chart) chart.style.display = "none";
-  if (actionButtons) actionButtons.style.display = "none";
-  if (totalCard) totalCard.style.display = "none";
+        <label>
+          Initial Balance:
+          <input type="number" step="0.01" id="assetBalanceInput" required />
+        </label>
 
-  const container = document.getElementById("assets");
-
-  // Inject modal into container
-  container.innerHTML = `
-    <div class="auth-card">
-      <h2>Add New Asset</h2>
-      <p>Fill the details below to create a new asset.</p>
-    </div>
-
-    <!-- Add Asset Modal -->
-    <div id="addAssetModal" class="modal">
-      <div class="modal-content">
-        <h3>Add Asset</h3>
-        <form id="addAssetForm">
-          <label>
-            Asset Name:
-            <input type="text" id="assetNameInput" required />
-          </label>
-
-          <label>
-            Initial Balance:
-            <input type="number" step="0.01" id="assetBalanceInput" required />
-          </label>
-
-          <div class="modal-buttons">
-            <button type="submit" class="btn-primary">Add Asset</button>
-            <button type="button" id="closeAddAssetModal" class="btn-secondary">Cancel</button>
-          </div>
-        </form>
-      </div>
+        <div class="modal-buttons">
+          <button type="submit" class="btn-primary">Add Asset</button>
+          <button type="button" id="closeAddAssetModal" class="btn-secondary">Cancel</button>
+        </div>
+      </form>
     </div>
   `;
 
-  const modal = document.getElementById("addAssetModal");
-  const form = document.getElementById("addAssetForm");
-  const closeButton = document.getElementById("closeAddAssetModal");
+  // Add modal on top of screen
+  document.body.appendChild(modal);
+
+  const form = modal.querySelector("#addAssetForm");
+  const closeButton = modal.querySelector("#closeAddAssetModal");
 
   // CLOSE MODAL
   closeButton.addEventListener("click", () => {
     modal.remove();
-    loadAssets(); // restore normal view
   });
 
   // SUBMIT ASSET
@@ -673,7 +658,7 @@ async function addAsset() {
       if (!response.ok) throw new Error("Error creating asset");
 
       modal.remove();
-      await loadAssets(); // restore asset list
+      await loadAssets(); // reload list without hiding anything
     } catch (error) {
       console.error("Add Asset error:", error);
       alert("Failed to add asset.");
