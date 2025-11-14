@@ -25,8 +25,37 @@
         <span id="worthChange" class="worth-change"></span>
       </div>
 
-      <div class="action-buttons">
+      <!-- <div class="action-buttons">
         <button onclick="addAsset()">Add Asset</button>
+      </div> -->
+      <!-- Add Asset Modal -->
+      <div id="addAssetModal" class="modal hidden">
+        <div class="modal-content">
+          <h3>Add Asset</h3>
+          <form id="addAssetForm">
+            <label>
+              Asset Name:
+              <input type="text" id="assetNameInput" required />
+            </label>
+            <label>
+              Initial Balance:
+              <input type="number" id="assetBalanceInput" required />
+            </label>
+
+            <div class="modal-buttons">
+              <button type="submit" class="btn-primary" onclick="addAsset()">
+                Add Asset
+              </button>
+              <button
+                type="button"
+                id="closeAddAssetModal"
+                class="btn-secondary"
+              >
+                Cancel
+              </button>
+            </div>
+          </form>
+        </div>
       </div>
 
       <div id="assets"></div>
