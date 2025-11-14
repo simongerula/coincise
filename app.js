@@ -570,28 +570,115 @@ function createLoader() {
   return container;
 }
 
-async function addAsset() {
-  const name = prompt("Enter asset name:");
-  if (!name) return;
-  const balanceStr = prompt("Initial balance:");
-  const balance = parseFloat(balanceStr);
-  if (isNaN(balance)) return alert("Invalid balance");
+// async function addAsset() {
+//   const name = prompt("Enter asset name:");
+//   if (!name) return;
+//   const balanceStr = prompt("Initial balance:");
+//   const balance = parseFloat(balanceStr);
+//   if (isNaN(balance)) return alert("Invalid balance");
 
-  try {
-    const response = await fetch(
-      "https://coincise-api.simongerula.workers.dev/assets/",
-      {
-        method: "POST",
-        headers: getAuthHeaders(),
-        body: JSON.stringify({ name, balance }),
-      }
+//   try {
+//     const response = await fetch(
+//       "https://coincise-api.simongerula.workers.dev/assets/",
+//       {
+//         method: "POST",
+//         headers: getAuthHeaders(),
+//         body: JSON.stringify({ name, balance }),
+//       }
+//     );
+//     if (!response.ok) throw new Error("Network response was not ok");
+//     await loadAssets();
+//   } catch (error) {
+//     console.error("Error adding asset:", error);
+//     alert("Failed to add asset. Please try again.");
+//   }
+// }
+async function addAsset() {
+  // Hide chart + buttons just like login
+  const chart = document.querySelector(".chart");
+  const actionButtons = document.querySelector(".action-buttons");
+  const totalCard = document.querySelector(".total-card");
+
+  if (chart) chart.style.display = "none";
+  if (actionButtons) actionButtons.style.display = "none";
+  if (totalCard) totalCard.style.display = "none";
+
+  const container = document.getElementById("assets");
+
+  // Inject modal into container
+  container.innerHTML = `
+    <div class="auth-card">
+      <h2>Add New Asset</h2>
+      <p>Fill the details below to create a new asset.</p>
+    </div>
+
+    <!-- Add Asset Modal -->
+    <div id="addAssetModal" class="modal">
+      <div class="modal-content">
+        <h3>Add Asset</h3>
+        <form id="addAssetForm">
+          <label>
+            Asset Name:
+            <input type="text" id="assetNameInput" required />
+          </label>
+
+          <label>
+            Initial Balance:
+            <input type="number" step="0.01" id="assetBalanceInput" required />
+          </label>
+
+          <div class="modal-buttons">
+            <button type="submit" class="btn-primary">Add Asset</button>
+            <button type="button" id="closeAddAssetModal" class="btn-secondary">Cancel</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  `;
+
+  const modal = document.getElementById("addAssetModal");
+  const form = document.getElementById("addAssetForm");
+  const closeButton = document.getElementById("closeAddAssetModal");
+
+  // CLOSE MODAL
+  closeButton.addEventListener("click", () => {
+    modal.remove();
+    loadAssets(); // restore normal view
+  });
+
+  // SUBMIT ASSET
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+
+    const name = document.getElementById("assetNameInput").value.trim();
+    const balance = parseFloat(
+      document.getElementById("assetBalanceInput").value.trim()
     );
-    if (!response.ok) throw new Error("Network response was not ok");
-    await loadAssets();
-  } catch (error) {
-    console.error("Error adding asset:", error);
-    alert("Failed to add asset. Please try again.");
-  }
+
+    if (!name || isNaN(balance)) {
+      alert("Please enter valid asset data");
+      return;
+    }
+
+    try {
+      const response = await fetch(
+        "https://coincise-api.simongerula.workers.dev/assets/",
+        {
+          method: "POST",
+          headers: getAuthHeaders(),
+          body: JSON.stringify({ name, balance }),
+        }
+      );
+
+      if (!response.ok) throw new Error("Error creating asset");
+
+      modal.remove();
+      await loadAssets(); // restore asset list
+    } catch (error) {
+      console.error("Add Asset error:", error);
+      alert("Failed to add asset.");
+    }
+  });
 }
 
 function changeBalance(index, amount) {
