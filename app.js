@@ -564,6 +564,16 @@ async function loadAssets() {
           // clear previous
           movementContainer.innerHTML = "";
 
+          if (movements.length === 0) {
+            const empty = document.createElement("div");
+            empty.className = "movement-empty";
+            empty.textContent = "No movements yet";
+            movementContainer.appendChild(empty);
+            movementContainer.style.display =
+              movementContainer.style.display === "none" ? "block" : "none";
+            return;
+          }
+
           movements.forEach((m) => {
             const line = document.createElement("div");
             line.className = "movement-line";

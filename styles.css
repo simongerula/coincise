@@ -458,3 +458,10 @@ button.minus:hover {
   font-size: 0.9rem;
   color: #ccc;
 }
+
+.movement-empty {
+  padding: 0.4rem;
+  color: #777;
+  font-size: 0.9rem;
+  font-style: italic;
+}
