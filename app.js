@@ -92,13 +92,20 @@ async function loadAssets() {
       const dropdown = document.createElement("div");
       dropdown.className = "dropdown-content";
 
+      //   const addAction = document.createElement("div");
+      //   addAction.className = "dropdown-item";
+      //   addAction.textContent = "Add funds";
+      //   addAction.onclick = () => {
+      //     const input = prompt(`Add amount to ${asset.name}:`);
+      //     const amount = parseFloat(input);
+      //     if (!isNaN(amount)) changeBalance(index, amount);
+      //   };
       const addAction = document.createElement("div");
       addAction.className = "dropdown-item";
       addAction.textContent = "Add funds";
+
       addAction.onclick = () => {
-        const input = prompt(`Add amount to ${asset.name}:`);
-        const amount = parseFloat(input);
-        if (!isNaN(amount)) changeBalance(index, amount);
+        showAddFundsModal(asset, index);
       };
 
       const subtractAction = document.createElement("div");
@@ -648,3 +655,57 @@ document.addEventListener("click", (e) => {
     });
   }
 });
+
+function showAddFundsModal(asset, index) {
+  // Create modal
+  const modal = document.createElement("div");
+  modal.className = "modal";
+  modal.id = "addFundsModal";
+  modal.innerHTML = `
+    <div class="modal-content">
+      <h3>Add Funds to "${asset.name}"</h3>
+
+      <form id="addFundsForm">
+        <label>
+          Amount:
+          <input type="number" step="0.01" id="addFundsInput" required />
+        </label>
+
+        <div class="modal-buttons">
+          <button type="submit" class="btn-primary">Add</button>
+          <button type="button" id="closeAddFundsModal" class="btn-secondary">Cancel</button>
+        </div>
+      </form>
+    </div>
+  `;
+
+  // Add to page
+  document.body.appendChild(modal);
+
+  const form = modal.querySelector("#addFundsForm");
+  const closeButton = modal.querySelector("#closeAddFundsModal");
+
+  // Close modal
+  closeButton.addEventListener("click", () => {
+    modal.remove();
+  });
+
+  // Submit
+  form.addEventListener("submit", (e) => {
+    e.preventDefault();
+
+    const amount = parseFloat(
+      document.getElementById("addFundsInput").value.trim()
+    );
+
+    if (isNaN(amount)) {
+      alert("Please enter a valid amount.");
+      return;
+    }
+
+    // Call your existing logic
+    changeBalance(index, amount);
+
+    modal.remove();
+  });
+}
