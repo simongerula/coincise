@@ -446,7 +446,7 @@ button.minus:hover {
   padding: 0.5rem 0;
   /* remove any left border */
   border-left: none;
-}}
+}
 
 .movement-line {
   width: 100%;
