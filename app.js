@@ -92,14 +92,6 @@ async function loadAssets() {
       const dropdown = document.createElement("div");
       dropdown.className = "dropdown-content";
 
-      //   const addAction = document.createElement("div");
-      //   addAction.className = "dropdown-item";
-      //   addAction.textContent = "Add funds";
-      //   addAction.onclick = () => {
-      //     const input = prompt(`Add amount to ${asset.name}:`);
-      //     const amount = parseFloat(input);
-      //     if (!isNaN(amount)) changeBalance(index, amount);
-      //   };
       const addAction = document.createElement("div");
       addAction.className = "dropdown-item";
       addAction.textContent = "Add funds";
@@ -108,13 +100,20 @@ async function loadAssets() {
         showAddFundsModal(asset, index);
       };
 
+      //   const subtractAction = document.createElement("div");
+      //   subtractAction.className = "dropdown-item";
+      //   subtractAction.textContent = "Subtract funds";
+      //   subtractAction.onclick = () => {
+      //     const input = prompt(`Subtract amount from ${asset.name}:`);
+      //     const amount = parseFloat(input);
+      //     if (!isNaN(amount)) changeBalance(index, -amount);
+      //   };
       const subtractAction = document.createElement("div");
       subtractAction.className = "dropdown-item";
       subtractAction.textContent = "Subtract funds";
+
       subtractAction.onclick = () => {
-        const input = prompt(`Subtract amount from ${asset.name}:`);
-        const amount = parseFloat(input);
-        if (!isNaN(amount)) changeBalance(index, -amount);
+        showSubtractFundsModal(asset, index);
       };
 
       const deleteAction = document.createElement("div");
@@ -705,6 +704,60 @@ function showAddFundsModal(asset, index) {
 
     // Call your existing logic
     changeBalance(index, amount);
+
+    modal.remove();
+  });
+}
+
+function showSubtractFundsModal(asset, index) {
+  // Create modal
+  const modal = document.createElement("div");
+  modal.className = "modal";
+  modal.id = "subtractFundsModal";
+  modal.innerHTML = `
+    <div class="modal-content">
+      <h3>Subtract Funds from "${asset.name}"</h3>
+
+      <form id="subtractFundsForm">
+        <label>
+          Amount:
+          <input type="number" step="0.01" id="subtractFundsInput" required />
+        </label>
+
+        <div class="modal-buttons">
+          <button type="submit" class="btn-primary">Subtract</button>
+          <button type="button" id="closeSubtractFundsModal" class="btn-secondary">Cancel</button>
+        </div>
+      </form>
+    </div>
+  `;
+
+  // Add to the page
+  document.body.appendChild(modal);
+
+  const form = modal.querySelector("#subtractFundsForm");
+  const closeButton = modal.querySelector("#closeSubtractFundsModal");
+
+  // Close modal
+  closeButton.addEventListener("click", () => {
+    modal.remove();
+  });
+
+  // Submit
+  form.addEventListener("submit", (e) => {
+    e.preventDefault();
+
+    const amount = parseFloat(
+      document.getElementById("subtractFundsInput").value.trim()
+    );
+
+    if (isNaN(amount)) {
+      alert("Please enter a valid amount.");
+      return;
+    }
+
+    // Your logic uses negative values to subtract funds
+    changeBalance(index, -amount);
 
     modal.remove();
   });
