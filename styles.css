@@ -442,44 +442,19 @@ button.minus:hover {
 
 /* Container for movements placed below each asset card */
 .asset-movements {
-  margin: 4px 0 12px 0; /* spacing between asset and next asset */
-  padding: 6px 12px;
-  background-color: #1e1e1e; /* slightly darker than page background */
-  border-left: 3px solid #4caf50; /* accent color */
-  border-radius: 4px;
+  margin: 0 0 1rem 0;
+  padding: 0.5rem 0;
+  /* remove any left border */
+  border-left: none;
+}
+
+.movement-line {
+  padding: 0.25rem 0.5rem;
+  margin-bottom: 0.25rem;
+  /* remove the green line */
+  border-left: none;
+  /* optional: keep some subtle separation */
+  border-bottom: 1px solid #333;
   font-size: 0.9rem;
-  color: #e0e0e0;
-  transition: max-height 0.3s ease, opacity 0.3s ease;
-  overflow: hidden;
-}
-
-/* Each line in the movement list */
-.asset-movements .movement-line {
-  padding: 2px 0;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-.asset-movements .movement-line:last-child {
-  border-bottom: none;
-}
-
-/* Color coding */
-.asset-movements .movement-line[data-type="income"] {
-  color: #4caf50;
-}
-
-.asset-movements .movement-line[data-type="expense"] {
-  color: #f44336;
-}
-
-/* Slide toggle (optional) */
-.asset-movements.show {
-  max-height: 500px;
-  opacity: 1;
-}
-
-.asset-movements.hide {
-  max-height: 0;
-  opacity: 0;
-  padding: 0 12px;
+  color: #ccc;
 }
