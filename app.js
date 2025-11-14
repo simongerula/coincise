@@ -570,78 +570,29 @@ function createLoader() {
   return container;
 }
 
-// async function addAsset() {
-//   const name = prompt("Enter asset name:");
-//   if (!name) return;
-//   const balanceStr = prompt("Initial balance:");
-//   const balance = parseFloat(balanceStr);
-//   if (isNaN(balance)) return alert("Invalid balance");
+async function addAsset() {
+  const name = prompt("Enter asset name:");
+  if (!name) return;
+  const balanceStr = prompt("Initial balance:");
+  const balance = parseFloat(balanceStr);
+  if (isNaN(balance)) return alert("Invalid balance");
 
-//   try {
-//     const response = await fetch(
-//       "https://coincise-api.simongerula.workers.dev/assets/",
-//       {
-//         method: "POST",
-//         headers: getAuthHeaders(),
-//         body: JSON.stringify({ name, balance }),
-//       }
-//     );
-//     if (!response.ok) throw new Error("Network response was not ok");
-//     await loadAssets();
-//   } catch (error) {
-//     console.error("Error adding asset:", error);
-//     alert("Failed to add asset. Please try again.");
-//   }
-// }
-function openAddAssetModal() {
-  document.getElementById("addAssetModal").classList.remove("hidden");
+  try {
+    const response = await fetch(
+      "https://coincise-api.simongerula.workers.dev/assets/",
+      {
+        method: "POST",
+        headers: getAuthHeaders(),
+        body: JSON.stringify({ name, balance }),
+      }
+    );
+    if (!response.ok) throw new Error("Network response was not ok");
+    await loadAssets();
+  } catch (error) {
+    console.error("Error adding asset:", error);
+    alert("Failed to add asset. Please try again.");
+  }
 }
-
-function closeAddAssetModal() {
-  document.getElementById("addAssetModal").classList.add("hidden");
-}
-
-document.getElementById("closeAddAssetModal").addEventListener("click", () => {
-  closeAddAssetModal();
-});
-
-// Handle form submission
-document
-  .getElementById("addAssetForm")
-  .addEventListener("submit", async (e) => {
-    e.preventDefault();
-
-    const name = document.getElementById("assetNameInput").value.trim();
-    const balanceStr = document
-      .getElementById("assetBalanceInput")
-      .value.trim();
-    const balance = parseFloat(balanceStr);
-
-    if (!name || isNaN(balance)) {
-      alert("Please provide valid values.");
-      return;
-    }
-
-    try {
-      const response = await fetch(
-        "https://coincise-api.simongerula.workers.dev/assets/",
-        {
-          method: "POST",
-          headers: getAuthHeaders(),
-          body: JSON.stringify({ name, balance }),
-        }
-      );
-
-      if (!response.ok) throw new Error("Network error");
-
-      closeAddAssetModal();
-      document.getElementById("addAssetForm").reset();
-      await loadAssets();
-    } catch (error) {
-      console.error("Error adding asset:", error);
-      alert("Failed to add asset. Please try again.");
-    }
-  });
 
 function changeBalance(index, amount) {
   assets[index].balance += amount;
