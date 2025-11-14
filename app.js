@@ -567,10 +567,23 @@ async function loadAssets() {
           movements.forEach((m) => {
             const line = document.createElement("div");
             line.className = "movement-line";
-            const sign = m.amount > 0 ? "+" : "-";
+
+            let sign = "";
+            let color = "#ffffff"; // default white
+
+            if (m.note === "Deposit") {
+              sign = "+";
+              color = "green";
+            } else if (m.note === "Withdrawal") {
+              sign = "-";
+              color = "red";
+            } // "Initial balance" stays white with no sign
+
             const amount = `$${Math.abs(m.amount)}`;
             const date = new Date(m.dateCreated).toLocaleDateString();
             line.textContent = `${m.note} on ${date} ${sign}${amount}`;
+            line.style.color = color;
+
             movementContainer.appendChild(line);
           });
 
