@@ -315,6 +315,138 @@ async function loadAssets() {
     //   });
     // });
 
+    //     assets.forEach((asset, index) => {
+    //   const div = document.createElement("div");
+    //   div.className = "asset";
+    //   div.dataset.assetId = asset.id; // store asset id
+
+    //   const nameSpan = document.createElement("span");
+    //   nameSpan.className = "asset-name";
+    //   nameSpan.innerHTML = `<strong>${asset.name}</strong><br><span class="balance">$${asset.balance.toFixed(2)}</span>`;
+
+    //   const buttonContainer = document.createElement("div");
+    //   buttonContainer.className = "asset-buttons";
+
+    //   const percent = total > 0 ? (asset.balance / total) * 100 : 0;
+    //   const percentDiv = document.createElement("div");
+    //   percentDiv.className = "asset-percent";
+
+    //   const pieIcon = document.createElement("img");
+    //   pieIcon.src = "/src/pie-chart-icon.svg";
+    //   pieIcon.className = "icon-pie";
+    //   percentDiv.appendChild(pieIcon);
+    //   percentDiv.appendChild(document.createTextNode(`${Math.round(percent)}%`));
+
+    //   const kebabBtn = document.createElement("button");
+    //   kebabBtn.className = "kebab-menu";
+    //   kebabBtn.innerHTML = "⋮";
+    //   kebabBtn.onclick = (e) => {
+    //     e.stopPropagation();
+    //     const dropdown = kebabBtn.nextElementSibling;
+    //     dropdown.classList.toggle("show");
+    //     document.querySelectorAll(".dropdown-content.show").forEach((menu) => {
+    //       if (menu !== dropdown) menu.classList.remove("show");
+    //     });
+    //   };
+
+    //   const dropdown = document.createElement("div");
+    //   dropdown.className = "dropdown-content";
+
+    //   const addAction = document.createElement("div");
+    //   addAction.className = "dropdown-item";
+    //   addAction.textContent = "Add funds";
+    //   addAction.onclick = () => {
+    //     const input = prompt(`Add amount to ${asset.name}:`);
+    //     const amount = parseFloat(input);
+    //     if (!isNaN(amount)) changeBalance(index, amount);
+    //   };
+
+    //   const subtractAction = document.createElement("div");
+    //   subtractAction.className = "dropdown-item";
+    //   subtractAction.textContent = "Subtract funds";
+    //   subtractAction.onclick = () => {
+    //     const input = prompt(`Subtract amount from ${asset.name}:`);
+    //     const amount = parseFloat(input);
+    //     if (!isNaN(amount)) changeBalance(index, -amount);
+    //   };
+
+    //   const deleteAction = document.createElement("div");
+    //   deleteAction.className = "dropdown-item delete";
+    //   deleteAction.textContent = "Delete asset";
+    //   deleteAction.onclick = async () => {
+    //     if (confirm(`Are you sure you want to delete ${asset.name}?`)) {
+    //       try {
+    //         const response = await fetch(
+    //           `https://coincise-api.simongerula.workers.dev/assets/${asset.id}`,
+    //           { method: "DELETE", headers: getAuthHeaders() }
+    //         );
+    //         if (!response.ok) throw new Error("Network response was not ok");
+    //         await loadAssets();
+    //       } catch (error) {
+    //         console.error("Error removing asset:", error);
+    //         alert("Failed to remove asset. Please try again.");
+    //       }
+    //     }
+    //   };
+
+    //   dropdown.appendChild(addAction);
+    //   dropdown.appendChild(subtractAction);
+    //   dropdown.appendChild(deleteAction);
+
+    //   buttonContainer.appendChild(percentDiv);
+    //   buttonContainer.appendChild(kebabBtn);
+    //   buttonContainer.appendChild(dropdown);
+
+    //   div.appendChild(nameSpan);
+    //   div.appendChild(buttonContainer);
+
+    //   // ✅ Movement container (hidden initially)
+    //   const movementContainer = document.createElement("div");
+    //   movementContainer.className = "asset-movements";
+    //   movementContainer.style.display = "none";
+    //   div.appendChild(movementContainer);
+
+    //   container.appendChild(div);
+
+    //   // Click to fetch and toggle movements
+    //   div.addEventListener("click", async (e) => {
+    //     if ((e.target).closest(".asset-buttons")) return; // ignore kebab clicks
+
+    //     const assetId = div.dataset.assetId;
+    //     if (!assetId) return;
+
+    //     try {
+    //       const response = await fetch(
+    //         `https://coincise-api.simongerula.workers.dev/asset-movements?assetId=${assetId}`,
+    //         { headers: getAuthHeaders() }
+    //       );
+    //       if (!response.ok) throw new Error("Failed to fetch movements");
+
+    //       const movements = await response.json();
+    //       // sort desc by id
+    //       movements.sort((a, b) => b.id - a.id);
+
+    //       // clear previous
+    //       movementContainer.innerHTML = "";
+
+    //       movements.forEach((m) => {
+    //         const line = document.createElement("div");
+    //         line.className = "movement-line";
+    //         const sign = m.amount > 0 ? "+" : "-";
+    //         const amount = `$${Math.abs(m.amount)}`;
+    //         const date = new Date(m.dateCreated).toLocaleDateString();
+    //         line.textContent = `${m.note} on ${date} ${sign}${amount}`;
+    //         movementContainer.appendChild(line);
+    //       });
+
+    //       movementContainer.style.display =
+    //         movementContainer.style.display === "none" ? "block" : "none";
+    //     } catch (err) {
+    //       console.error("Error fetching movements:", err);
+    //     }
+    //   });
+    // });
+
     assets.forEach((asset, index) => {
       const div = document.createElement("div");
       div.className = "asset";
@@ -404,13 +536,13 @@ async function loadAssets() {
       div.appendChild(nameSpan);
       div.appendChild(buttonContainer);
 
-      // ✅ Movement container (hidden initially)
+      container.appendChild(div);
+
+      // ✅ Movement container BELOW the asset card
       const movementContainer = document.createElement("div");
       movementContainer.className = "asset-movements";
       movementContainer.style.display = "none";
-      div.appendChild(movementContainer);
-
-      container.appendChild(div);
+      container.appendChild(movementContainer);
 
       // Click to fetch and toggle movements
       div.addEventListener("click", async (e) => {
@@ -427,8 +559,7 @@ async function loadAssets() {
           if (!response.ok) throw new Error("Failed to fetch movements");
 
           const movements = await response.json();
-          // sort desc by id
-          movements.sort((a, b) => b.id - a.id);
+          movements.sort((a, b) => b.id - a.id); // descending by id
 
           // clear previous
           movementContainer.innerHTML = "";
