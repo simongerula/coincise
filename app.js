@@ -418,8 +418,15 @@ async function loadAssets() {
             const amount = `$${Math.abs(m.amount)}`;
             const date = new Date(m.dateCreated).toLocaleDateString();
 
-            line.textContent = `${m.note} on ${date} ${sign}${amount}`;
-            line.style.color = color;
+            const left = document.createElement("span");
+            left.textContent = `${m.note} on ${date}`;
+
+            const right = document.createElement("span");
+            right.textContent = `${sign}${amount}`;
+            right.style.color = color;
+
+            line.appendChild(left);
+            line.appendChild(right);
 
             movementContainer.appendChild(line);
           });
