@@ -100,20 +100,20 @@ async function loadAssets() {
         showAddFundsModal(asset, index);
       };
 
-      //   const subtractAction = document.createElement("div");
-      //   subtractAction.className = "dropdown-item";
-      //   subtractAction.textContent = "Subtract funds";
-      //   subtractAction.onclick = () => {
-      //     const input = prompt(`Subtract amount from ${asset.name}:`);
-      //     const amount = parseFloat(input);
-      //     if (!isNaN(amount)) changeBalance(index, -amount);
-      //   };
       const subtractAction = document.createElement("div");
       subtractAction.className = "dropdown-item";
       subtractAction.textContent = "Subtract funds";
 
       subtractAction.onclick = () => {
         showSubtractFundsModal(asset, index);
+      };
+
+      const transferAction = document.createElement("div");
+      transferAction.className = "dropdown-item";
+      transferAction.textContent = "Move funds";
+
+      transferAction.onclick = () => {
+        showTransferModal(asset);
       };
 
       const deleteAction = document.createElement("div");
@@ -137,6 +137,7 @@ async function loadAssets() {
 
       dropdown.appendChild(addAction);
       dropdown.appendChild(subtractAction);
+      dropdown.appendChild(transferAction);
       dropdown.appendChild(deleteAction);
 
       buttonContainer.appendChild(percentDiv);
@@ -761,4 +762,83 @@ function showSubtractFundsModal(asset, index) {
 
     modal.remove();
   });
+}
+
+function showTransferModal(fromAsset) {
+  // Create modal container
+  const modal = document.createElement("div");
+  modal.className = "modal";
+
+  modal.innerHTML = `
+    <div class="modal-content">
+      <h3>Transfer from ${fromAsset.name}</h3>
+
+      <label>
+        Select target asset:
+        <select id="transferTargetAsset"></select>
+      </label>
+
+      <label>
+        Amount:
+        <input type="number" step="0.01" id="transferAmountInput" />
+      </label>
+
+      <div class="modal-buttons">
+        <button id="confirmTransfer" class="btn-primary">Transfer</button>
+        <button id="cancelTransfer" class="btn-secondary">Cancel</button>
+      </div>
+    </div>
+  `;
+
+  document.body.appendChild(modal);
+
+  // Populate asset list
+  const select = modal.querySelector("#transferTargetAsset");
+  assets.forEach((a) => {
+    if (a.id !== fromAsset.id) {
+      const opt = document.createElement("option");
+      opt.value = a.id;
+      opt.textContent = a.name;
+      select.appendChild(opt);
+    }
+  });
+
+  // Cancel
+  modal.querySelector("#cancelTransfer").onclick = () => modal.remove();
+
+  // Confirm
+  modal.querySelector("#confirmTransfer").onclick = async () => {
+    const toAssetId = Number(select.value);
+    const amount = parseFloat(
+      modal.querySelector("#transferAmountInput").value
+    );
+
+    if (!amount || isNaN(amount) || amount <= 0) {
+      alert("Invalid transfer amount");
+      return;
+    }
+
+    try {
+      const res = await fetch(
+        "https://coincise-api.simongerula.workers.dev/transfer",
+        {
+          method: "POST",
+          headers: getAuthHeaders(),
+          body: JSON.stringify({
+            fromAssetId: fromAsset.id,
+            toAssetId,
+            amount,
+          }),
+        }
+      );
+
+      if (!res.ok) throw new Error("Transfer failed");
+
+      modal.remove();
+      await loadAssets(); // refresh UI
+    } catch (err) {
+      console.error(err);
+      alert("Transfer failed");
+    }
+  };
 }
