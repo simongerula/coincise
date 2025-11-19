@@ -46,6 +46,7 @@ async function loadAssets() {
 
     const data = await response.json();
     assets = data.assets;
+    assets.sort((a, b) => b.balance - a.balance);
     const total = data.totalWorth || 0;
 
     const container = document.getElementById("assets");
@@ -193,39 +194,6 @@ async function loadAssets() {
             return;
           }
 
-          // movements exist
-          //   movements.forEach((m) => {
-          //     const line = document.createElement("div");
-          //     line.className = "movement-line";
-
-          //     let sign = "";
-          //     let color = "#ffffff";
-
-          //     if (m.note === "Deposit") {
-          //       sign = "+";
-          //       color = "green";
-          //     } else if (m.note === "Withdrawal") {
-          //       sign = "-";
-          //       color = "red";
-          //     }
-
-          //     console.log(m.fromAssetId)
-
-          //     const amount = `$${Math.abs(m.amount)}`;
-          //     const date = new Date(m.dateCreated).toLocaleDateString();
-
-          //     const left = document.createElement("span");
-          //     left.textContent = `${m.note} on ${date}`;
-
-          //     const right = document.createElement("span");
-          //     right.textContent = `${sign}${amount}`;
-          //     right.style.color = color;
-
-          //     line.appendChild(left);
-          //     line.appendChild(right);
-
-          //     movementContainer.appendChild(line);
-          //   });
           movements.forEach((m) => {
             const line = document.createElement("div");
             line.className = "movement-line";
