@@ -696,6 +696,10 @@ function showAddFundsModal(asset, index) {
           Amount:
           <input type="number" step="0.01" id="addFundsInput" required />
         </label>
+        <label class="checkbox-label" style="margin-top: 10px;">
+          <input type="checkbox" id="addInterestCheckbox" />
+          Treat as interest/value earned (no movement recorded)
+        </label>
 
         <div class="modal-buttons">
           <button type="submit" class="btn-primary">Add</button>
