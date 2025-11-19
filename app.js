@@ -194,14 +194,66 @@ async function loadAssets() {
           }
 
           // movements exist
+          //   movements.forEach((m) => {
+          //     const line = document.createElement("div");
+          //     line.className = "movement-line";
+
+          //     let sign = "";
+          //     let color = "#ffffff";
+
+          //     if (m.note === "Deposit") {
+          //       sign = "+";
+          //       color = "green";
+          //     } else if (m.note === "Withdrawal") {
+          //       sign = "-";
+          //       color = "red";
+          //     }
+
+          //     console.log(m.fromAssetId)
+
+          //     const amount = `$${Math.abs(m.amount)}`;
+          //     const date = new Date(m.dateCreated).toLocaleDateString();
+
+          //     const left = document.createElement("span");
+          //     left.textContent = `${m.note} on ${date}`;
+
+          //     const right = document.createElement("span");
+          //     right.textContent = `${sign}${amount}`;
+          //     right.style.color = color;
+
+          //     line.appendChild(left);
+          //     line.appendChild(right);
+
+          //     movementContainer.appendChild(line);
+          //   });
           movements.forEach((m) => {
             const line = document.createElement("div");
             line.className = "movement-line";
 
             let sign = "";
             let color = "#ffffff";
+            let noteText = m.note;
+            const amount = `$${Math.abs(m.amount)}`;
+            const date = new Date(m.dateCreated).toLocaleDateString();
 
-            if (m.note === "Deposit") {
+            // ---- TRANSFER LOGIC ----
+            if (m.note === "Transfer") {
+              // This asset is the source
+              if (asset.id === m.fromAssetId) {
+                noteText = `Transfer to ${m.toAssetName}`;
+                sign = "-";
+                color = "red";
+
+                // This asset is the destination
+              } else if (asset.id === m.toAssetId) {
+                noteText = `Transfer from ${m.fromAssetName}`;
+                sign = "+";
+                color = "green";
+              }
+            }
+
+            // ---- DEPOSIT / WITHDRAWAL ----
+            else if (m.note === "Deposit") {
               sign = "+";
               color = "green";
             } else if (m.note === "Withdrawal") {
@@ -209,11 +261,9 @@ async function loadAssets() {
               color = "red";
             }
 
-            const amount = `$${Math.abs(m.amount)}`;
-            const date = new Date(m.dateCreated).toLocaleDateString();
-
+            // ---- RENDER ELEMENTS ----
             const left = document.createElement("span");
-            left.textContent = `${m.note} on ${date}`;
+            left.textContent = `${noteText} on ${date}`;
 
             const right = document.createElement("span");
             right.textContent = `${sign}${amount}`;
@@ -221,7 +271,6 @@ async function loadAssets() {
 
             line.appendChild(left);
             line.appendChild(right);
-
             movementContainer.appendChild(line);
           });
 
