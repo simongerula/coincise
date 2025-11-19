@@ -698,7 +698,7 @@ function showAddFundsModal(asset, index) {
         </label>
         <label class="checkbox-label" style="margin-top: 10px;">
           <input type="checkbox" id="addInterestCheckbox" />
-          Treat as interest/value earned (no movement recorded)
+          Interest/value earned (no movement recorded)
         </label>
 
         <div class="modal-buttons">
