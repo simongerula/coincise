@@ -471,7 +471,6 @@ button.minus:hover {
 .inline-checkbox {
   display: inline-flex;
   align-items: center;
-  gap: 0.4rem; /* space between checkbox and text */
-  margin-top: 1rem;
+  margin-top: 0.5rem;
   font-size: 0.9rem;
 }
