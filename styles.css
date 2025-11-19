@@ -467,3 +467,11 @@ button.minus:hover {
   font-size: 0.9rem;
   font-style: italic;
 }
+
+.inline-checkbox {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem; /* space between checkbox and text */
+  margin-top: 1rem;
+  font-size: 0.9rem;
+}
