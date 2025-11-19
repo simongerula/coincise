@@ -529,6 +529,10 @@ function showLoginCard() {
             Password:
             <input type="password" id="signupPassword" required />
           </label>
+          <label>
+            Confirm Password:
+            <input type="password" id="signupConfirmPassword" required />
+        </label>
           <div class="modal-buttons">
             <button type="submit" class="btn-primary">Sign Up</button>
             <button type="button" id="closeSignupModal" class="btn-secondary">Cancel</button>
@@ -615,9 +619,14 @@ function showLoginCard() {
     const email = document.getElementById("signupEmail").value.trim();
     const username = document.getElementById("signupUsername").value.trim();
     const password = document.getElementById("signupPassword").value.trim();
+    const password2 = document
+      .getElementById("signupConfirmPassword")
+      .value.trim();
 
     if (!email || !username || !password)
       return alert("All fields are required");
+
+    if (password !== password2) return alert("Passwords do not match");
 
     try {
       const response = await fetch(
