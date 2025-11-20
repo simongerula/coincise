@@ -697,8 +697,8 @@ function showAddFundsModal(asset, index) {
           <input type="number" step="0.01" id="addFundsInput" required />
         </label>
         <label class="inline-checkbox">
-        <input type="checkbox" id="isInterestCheckbox" />
-        Interest earned (no movement recorded)
+        <input type="checkbox" id="valueAdjustmentCheckbox" />
+        Value adjustment (don’t record movement)
         </label>
         <div class="modal-buttons">
           <button type="submit" class="btn-primary">Add</button>
@@ -752,6 +752,10 @@ function showSubtractFundsModal(asset, index) {
         <label>
           Amount:
           <input type="number" step="0.01" id="subtractFundsInput" required />
+        </label>
+        <label class="inline-checkbox">
+        <input type="checkbox" id="valueAdjustmentCheckbox" />
+        Value adjustment (don’t record movement)
         </label>
 
         <div class="modal-buttons">
