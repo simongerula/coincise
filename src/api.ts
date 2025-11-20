@@ -1,4 +1,16 @@
-function getAuthHeaders() {
+// src/api.ts
+
+export interface Asset {
+  id: number;
+  name: string;
+  balance: number;
+  [key: string]: any;
+}
+
+/**
+ * Helper to get authorization headers
+ */
+function getAuthHeaders(): Record<string, string> {
   const token = localStorage.getItem("auth_token");
   return {
     Authorization: `Bearer ${token}`,
@@ -6,18 +18,25 @@ function getAuthHeaders() {
   };
 }
 
-export async function fetchAssets() {
+/**
+ * Fetches all assets and total worth
+ */
+export async function fetchAssets(): Promise<{
+  assets: Asset[];
+  totalWorth: number;
+}> {
   const response = await fetch(
     "https://coincise-api.simongerula.workers.dev/assets/",
-    {
-      headers: getAuthHeaders(),
-    }
+    { headers: getAuthHeaders() }
   );
   if (!response.ok) throw new Error("Failed to fetch assets");
   return response.json();
 }
 
-export async function deleteAsset(asset) {
+/**
+ * Deletes an asset by ID
+ */
+export async function deleteAsset(asset: Asset): Promise<any> {
   const response = await fetch(
     `https://coincise-api.simongerula.workers.dev/assets/${asset.id}`,
     { method: "DELETE", headers: getAuthHeaders() }
@@ -26,7 +45,10 @@ export async function deleteAsset(asset) {
   return response.json();
 }
 
-export async function fetchAssetMovements(assetId) {
+/**
+ * Fetches movements for a specific asset
+ */
+export async function fetchAssetMovements(assetId: number): Promise<any[]> {
   const response = await fetch(
     `https://coincise-api.simongerula.workers.dev/asset-movements?assetId=${assetId}`,
     { headers: getAuthHeaders() }
@@ -35,7 +57,10 @@ export async function fetchAssetMovements(assetId) {
   return response.json();
 }
 
-export async function fetchWorthHistory(userId) {
+/**
+ * Fetches worth history for the user
+ */
+export async function fetchWorthHistory(userId: number): Promise<any> {
   const response = await fetch(
     `https://coincise-api.simongerula.workers.dev/worth-history?accountId=${userId}`,
     { headers: getAuthHeaders() }
@@ -44,7 +69,13 @@ export async function fetchWorthHistory(userId) {
   return response.json();
 }
 
-export async function createAsset(name, balance) {
+/**
+ *  Creates a new asset
+ */
+export async function createAsset(
+  name: string,
+  balance: number
+): Promise<Asset> {
   const response = await fetch(
     "https://coincise-api.simongerula.workers.dev/assets/",
     {
@@ -57,7 +88,14 @@ export async function createAsset(name, balance) {
   return response.json();
 }
 
-export async function updateAssetBalance(index, amount) {
+/**
+ * Updates an asset's balance
+ */
+export async function updateAssetBalance(
+  index: number,
+  amount: number,
+  assets: Asset[]
+): Promise<Asset> {
   assets[index].balance += amount;
   const response = await fetch(
     `https://coincise-api.simongerula.workers.dev/assets/${assets[index].id}`,
@@ -71,7 +109,10 @@ export async function updateAssetBalance(index, amount) {
   return response.json();
 }
 
-export async function login(username, password) {
+/**
+ * User login
+ */
+export async function login(username: string, password: string): Promise<any> {
   const response = await fetch(
     "https://coincise-api.simongerula.workers.dev/auth",
     {
@@ -84,7 +125,14 @@ export async function login(username, password) {
   return response.json();
 }
 
-export async function signup(email, username, password) {
+/**
+ * User signup
+ */
+export async function signup(
+  email: string,
+  username: string,
+  password: string
+): Promise<any> {
   const response = await fetch(
     "https://coincise-api.simongerula.workers.dev/signup",
     {
@@ -97,7 +145,14 @@ export async function signup(email, username, password) {
   return response.json();
 }
 
-export async function transferFunds(fromAsset, toAssetId, amount) {
+/**
+ * Transfers funds between assets
+ */
+export async function transferFunds(
+  fromAsset: Asset,
+  toAssetId: number,
+  amount: number
+): Promise<any> {
   const response = await fetch(
     "https://coincise-api.simongerula.workers.dev/transfer",
     {
