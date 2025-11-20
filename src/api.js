@@ -1,3 +1,11 @@
+function getAuthHeaders() {
+  const token = localStorage.getItem("auth_token");
+  return {
+    Authorization: `Bearer ${token}`,
+    "Content-Type": "application/json",
+  };
+}
+
 export async function fetchAssets() {
   const response = await fetch(
     "https://coincise-api.simongerula.workers.dev/assets/",
