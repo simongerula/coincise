@@ -1,5 +1,3 @@
-// src/api.ts
-
 export interface Asset {
   id: number;
   name: string;

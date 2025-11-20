@@ -1,0 +1,11 @@
+{
+  "compilerOptions": {
+    "target": "ES2020", // modern JS
+    "module": "ES2020", // so we can use import/export
+    "outDir": "dist", // compiled .js files go here
+    "strict": true, // optional, catches errors
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true
+  },
+  "include": ["src/**/*.ts"]
+}
