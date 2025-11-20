@@ -467,3 +467,18 @@ button.minus:hover {
   font-size: 0.9rem;
   font-style: italic;
 }
+
+/* Container for the checkbox + label text */
+.inline-checkbox {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+  width: auto !important;
+  justify-content: flex-start !important;
+}
+
+/* Prevent checkbox from stretching */
+.inline-checkbox input[type="checkbox"] {
+  width: auto !important;
+  flex: 0 0 auto !important;
+}
