@@ -71,7 +71,7 @@ async function loadAssets() {
       percentDiv.className = "asset-percent";
 
       const pieIcon = document.createElement("img");
-      pieIcon.src = "/src/pie-chart-icon.svg";
+      pieIcon.src = "/src/images/pie-chart-icon.svg";
       pieIcon.className = "icon-pie";
       percentDiv.appendChild(pieIcon);
       percentDiv.appendChild(
