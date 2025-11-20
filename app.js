@@ -1,4 +1,4 @@
-import { fetchAssets } from "./dist/src/api.js";
+import { fetchAssets } from "./dist/api.js";
 
 function getAuthHeaders() {
   const token = localStorage.getItem("auth_token");
