@@ -1,3 +1,5 @@
+import { fetchAssets } from "./src/api";
+
 function getAuthHeaders() {
   const token = localStorage.getItem("auth_token");
   return {
@@ -28,23 +30,26 @@ async function loadAssets() {
   loader.style.display = "flex";
 
   try {
-    const response = await fetch(
-      "https://coincise-api.simongerula.workers.dev/assets/",
-      {
-        method: "GET",
-        headers: getAuthHeaders(),
-      }
-    );
+    // const response = await fetch(
+    //   "https://coincise-api.simongerula.workers.dev/assets/",
+    //   {
+    //     method: "GET",
+    //     headers: getAuthHeaders(),
+    //   }
+    // );
 
-    if (response.status === 403 || response.status === 401) {
-      localStorage.removeItem("auth_token");
-      showLoginCard();
-      return;
-    }
+    // if (response.status === 403 || response.status === 401) {
+    //   localStorage.removeItem("auth_token");
+    //   showLoginCard();
+    //   return;
+    // }
 
-    if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+    // if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
 
-    const data = await response.json();
+    // const data = await response.json();
+    // assets = data.assets;
+    // assets.sort((a, b) => b.balance - a.balance);
+    const data = await fetchAssets(); // ✅ replaced direct fetch
     assets = data.assets;
     assets.sort((a, b) => b.balance - a.balance);
     const total = data.totalWorth || 0;
@@ -258,6 +263,11 @@ async function loadAssets() {
       await loadWorthHistory(userId);
     }
   } catch (error) {
+    if (error instanceof Error && error.message === "Unauthorized") {
+      localStorage.removeItem("auth_token");
+      showLoginCard();
+      return;
+    }
     console.error("Error loading assets:", error);
     document.getElementById(
       "assets"

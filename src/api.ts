@@ -29,6 +29,9 @@ export async function fetchAssets(): Promise<{
     "https://coincise-api.simongerula.workers.dev/assets/",
     { headers: getAuthHeaders() }
   );
+  if (response.status === 401 || response.status === 403) {
+    throw new Error("Unauthorized");
+  }
   if (!response.ok) throw new Error("Failed to fetch assets");
   return response.json();
 }
