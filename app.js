@@ -277,6 +277,59 @@ async function loadAssets() {
   }
 }
 
+// async function loadWorthHistory(userId) {
+//   if (!userId) return;
+//   try {
+//     const response = await fetch(
+//       `https://coincise-api.simongerula.workers.dev/worth-history?accountId=${userId}`,
+//       { headers: getAuthHeaders() }
+//     );
+//     if (!response.ok) throw new Error("Failed to load worth history");
+
+//     const data = await response.json();
+//     const history = data.history || [];
+//     const change = data.changePercent;
+//     const worthChangeEl = document.getElementById("worthChange");
+
+//     const sorted = history.sort((a, b) => a.period.localeCompare(b.period));
+//     const months = sorted.map((item) => formatMonthLabel(item.period));
+//     const values = sorted.map((item) => item.worth);
+
+//     if (change !== null && values.length >= 2) {
+//       const lastWorth = values[values.length - 1];
+//       const prevWorth = values[values.length - 2];
+//       const absoluteChange = lastWorth - prevWorth;
+
+//       const formattedPercent = `${change >= 0 ? "+" : ""}${change.toFixed(
+//         1
+//       )}% since last month`;
+//       const formattedAmount = `${
+//         absoluteChange >= 0 ? "+" : ""
+//       }$${absoluteChange.toFixed(0)} since last month`;
+
+//       // default display → percentage
+//       worthChangeEl.textContent = formattedPercent;
+//       worthChangeEl.style.color = change >= 0 ? "green" : "red";
+
+//       // toggle on click
+//       let showingPercent = true;
+//       worthChangeEl.style.cursor = "pointer";
+//       worthChangeEl.title = "Click to toggle between % and $ change";
+//       worthChangeEl.onclick = () => {
+//         showingPercent = !showingPercent;
+//         worthChangeEl.textContent = showingPercent
+//           ? formattedPercent
+//           : formattedAmount;
+//       };
+//     } else {
+//       worthChangeEl.textContent = "";
+//     }
+
+//     updateWorthChart(values, months);
+//   } catch (error) {
+//     console.error("Error loading worth history:", error);
+//   }
+// }
 async function loadWorthHistory(userId) {
   if (!userId) return;
   try {
@@ -287,17 +340,25 @@ async function loadWorthHistory(userId) {
     if (!response.ok) throw new Error("Failed to load worth history");
 
     const data = await response.json();
+
     const history = data.history || [];
     const change = data.changePercent;
+    const periods = data.periods || [];
+    const assetsHistory = data.assetsHistory || {};
+
+    const months = periods.map((p) => formatMonthLabel(p));
+
+    // Total values aligned to periods
+    const totalValues = periods.map((period) => {
+      const found = history.find((h) => h.period === period);
+      return found ? found.worth : null;
+    });
+
     const worthChangeEl = document.getElementById("worthChange");
 
-    const sorted = history.sort((a, b) => a.period.localeCompare(b.period));
-    const months = sorted.map((item) => formatMonthLabel(item.period));
-    const values = sorted.map((item) => item.worth);
-
-    if (change !== null && values.length >= 2) {
-      const lastWorth = values[values.length - 1];
-      const prevWorth = values[values.length - 2];
+    if (change !== null && totalValues.length >= 2) {
+      const lastWorth = totalValues[totalValues.length - 1];
+      const prevWorth = totalValues[totalValues.length - 2];
       const absoluteChange = lastWorth - prevWorth;
 
       const formattedPercent = `${change >= 0 ? "+" : ""}${change.toFixed(
@@ -307,11 +368,10 @@ async function loadWorthHistory(userId) {
         absoluteChange >= 0 ? "+" : ""
       }$${absoluteChange.toFixed(0)} since last month`;
 
-      // default display → percentage
       worthChangeEl.textContent = formattedPercent;
       worthChangeEl.style.color = change >= 0 ? "green" : "red";
 
-      // toggle on click
+      // toggle % / $
       let showingPercent = true;
       worthChangeEl.style.cursor = "pointer";
       worthChangeEl.title = "Click to toggle between % and $ change";
@@ -325,7 +385,23 @@ async function loadWorthHistory(userId) {
       worthChangeEl.textContent = "";
     }
 
-    updateWorthChart(values, months);
+    const assetLines = {}; // will be passed to updateWorthChart()
+
+    for (const [assetId, records] of Object.entries(assetsHistory)) {
+      const assetName = records[0]?.name || `Asset ${assetId}`;
+
+      const alignedValues = periods.map((period) => {
+        const found = records.find((r) => r.period === period);
+        return found ? found.worth : null;
+      });
+
+      assetLines[assetId] = {
+        name: assetName,
+        values: alignedValues,
+      };
+    }
+
+    updateWorthChart(totalValues, months, assetLines);
   } catch (error) {
     console.error("Error loading worth history:", error);
   }
@@ -337,35 +413,111 @@ function formatMonthLabel(period) {
   return date.toLocaleString("default", { month: "short", year: "numeric" });
 }
 
-function updateWorthChart(data, months) {
+// function updateWorthChart(data, months) {
+//   const ctx = document.getElementById("worthChart");
+//   if (window.worthLineChart) window.worthLineChart.destroy();
+//   if (!data || !data.length) return;
+
+//   window.worthLineChart = new Chart(ctx, {
+//     type: "line",
+//     data: {
+//       labels: months,
+//       datasets: [
+//         {
+//           label: "Total Worth",
+//           data: data,
+//           borderColor: "rgb(75, 192, 192)",
+//           tension: 0.3,
+//           fill: false,
+//           pointRadius: 4,
+//           pointHoverRadius: 6,
+//         },
+//       ],
+//     },
+//     options: {
+//       responsive: true,
+//       maintainAspectRatio: true,
+//       plugins: {
+//         legend: { display: false },
+//         tooltip: {
+//           callbacks: {
+//             label: (context) => "$" + context.parsed.y.toFixed(2),
+//           },
+//         },
+//       },
+//       scales: {
+//         y: {
+//           beginAtZero: true,
+//           ticks: {
+//             callback: (value) => "$" + value.toFixed(2),
+//           },
+//         },
+//       },
+//     },
+//   });
+// }
+function updateWorthChart(totalValues, months, assetLines = {}) {
   const ctx = document.getElementById("worthChart");
   if (window.worthLineChart) window.worthLineChart.destroy();
-  if (!data || !data.length) return;
+  if (!totalValues || !totalValues.length) return;
+
+  const datasets = [
+    {
+      label: "Total Worth",
+      data: totalValues,
+      borderColor: "rgb(75, 192, 192)",
+      tension: 0.3,
+      fill: false,
+      pointRadius: 4,
+      pointHoverRadius: 6,
+      borderWidth: 3,
+    },
+  ];
+
+  // Add asset lines
+  let colorIndex = 0;
+  const colors = [
+    "red",
+    "blue",
+    "orange",
+    "purple",
+    "green",
+    "yellow",
+    "pink",
+    "cyan",
+    "lime",
+    "magenta",
+  ];
+
+  for (const assetId in assetLines) {
+    const asset = assetLines[assetId];
+    datasets.push({
+      label: asset.name,
+      data: asset.values,
+      borderColor: colors[colorIndex++ % colors.length],
+      tension: 0.3,
+      fill: false,
+      borderWidth: 2,
+      pointRadius: 3,
+      pointHoverRadius: 5,
+    });
+  }
 
   window.worthLineChart = new Chart(ctx, {
     type: "line",
     data: {
       labels: months,
-      datasets: [
-        {
-          label: "Total Worth",
-          data: data,
-          borderColor: "rgb(75, 192, 192)",
-          tension: 0.3,
-          fill: false,
-          pointRadius: 4,
-          pointHoverRadius: 6,
-        },
-      ],
+      datasets,
     },
     options: {
       responsive: true,
       maintainAspectRatio: true,
       plugins: {
-        legend: { display: false },
+        legend: { display: true },
         tooltip: {
           callbacks: {
-            label: (context) => "$" + context.parsed.y.toFixed(2),
+            label: (context) =>
+              `${context.dataset.label}: $${context.parsed.y?.toFixed(2)}`,
           },
         },
       },
