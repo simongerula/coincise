@@ -292,6 +292,7 @@ async function loadWorthHistory(userId) {
     const history = data.history || [];
     const change = data.changePercent;
     const assetsHistory = data.assetsHistory || {};
+    const worthChangeEl = document.querySelector("#worthChange");
 
     // --- Prepare months and total values ---
     const sorted = history.sort((a, b) => a.period.localeCompare(b.period));
