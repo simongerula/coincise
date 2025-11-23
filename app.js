@@ -299,9 +299,9 @@ async function loadWorthHistory(userId) {
     const months = sorted.map((i) => i.period); // use raw period for mapping
     const totalValues = sorted.map((i) => i.worth);
 
-    if (change !== null && values.length >= 2) {
-      const lastWorth = values[values.length - 1];
-      const prevWorth = values[values.length - 2];
+    if (change !== null && totalValues.length >= 2) {
+      const lastWorth = totalValues[totalValues.length - 1];
+      const prevWorth = totalValues[totalValues.length - 2];
       const absoluteChange = lastWorth - prevWorth;
       const formattedPercent = `${change >= 0 ? "+" : ""}${change.toFixed(
         1
