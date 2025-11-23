@@ -444,8 +444,18 @@ function updateWorthChartStacked(months, assetLines = {}) {
     traces,
     layout,
     {
-      margin: { l: 30, r: 10, t: 10, b: 30 },
+      margin: { l: 30, r: 10, t: 10, b: 20 }, // reduce top margin
       autosize: true,
+      xaxis: {
+        automargin: true,
+        showgrid: false,
+      },
+      yaxis: {
+        automargin: true,
+        showgrid: true,
+      },
+      plot_bgcolor: "#1e1e1e", // match chart placeholder
+      paper_bgcolor: "#1e1e1e",
     },
     { responsive: true }
   );
