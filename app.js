@@ -345,9 +345,9 @@ async function loadWorthHistory(userId) {
     const history = data.history || [];
     const assetsHistory = data.assetsHistory || {};
 
-    // --- Prepare user totals ---
+    // --- Prepare months and total values ---
     const sorted = history.sort((a, b) => a.period.localeCompare(b.period));
-    const months = sorted.map((i) => formatMonthLabel(i.period));
+    const months = sorted.map((i) => i.period); // use raw period for mapping
     const totalValues = sorted.map((i) => i.worth);
 
     // --- Prepare each asset ---
@@ -356,46 +356,21 @@ async function loadWorthHistory(userId) {
     for (const assetId in assetsHistory) {
       const entries = assetsHistory[assetId];
 
-      // Create a lookup by period
+      // Map period → worth
       const worthByPeriod = {};
       entries.forEach((e) => {
         worthByPeriod[e.period] = e.worth;
       });
 
+      // Build values aligned with months
       assetLines[assetId] = {
         name: entries[0].name,
-        values: months.map((m) => worthByPeriod[m] || 0), // map each month
+        values: months.map((m) => worthByPeriod[m] || 0), // 0 if no data for month
       };
     }
 
-    // --- Update chart (stacked bar) ---
+    // --- Update chart ---
     updateWorthChartStacked(months, assetLines);
-
-    // --- Update top % change (optional) ---
-    const change = data.changePercent;
-    const worthChangeEl = document.getElementById("worthChange");
-
-    if (change !== null && totalValues.length >= 2) {
-      const last = totalValues[totalValues.length - 1];
-      const prev = totalValues[totalValues.length - 2];
-      const abs = last - prev;
-
-      const pct = `${change >= 0 ? "+" : ""}${change.toFixed(
-        1
-      )}% since last month`;
-      const amt = `${abs >= 0 ? "+" : ""}$${abs.toFixed(0)} since last month`;
-
-      worthChangeEl.textContent = pct;
-      worthChangeEl.style.color = change >= 0 ? "green" : "red";
-
-      worthChangeEl.onclick = () => {
-        worthChangeEl.textContent = worthChangeEl.textContent.includes("%")
-          ? amt
-          : pct;
-      };
-    } else {
-      worthChangeEl.textContent = "";
-    }
   } catch (err) {
     console.error("Error loading worth history:", err);
   }
@@ -403,8 +378,6 @@ async function loadWorthHistory(userId) {
 
 function updateWorthChartStacked(months, assetLines = {}) {
   const traces = [];
-
-  // Colors for assets
   const colors = [
     "rgb(75, 192, 192)",
     "rgb(255, 99, 132)",
@@ -420,7 +393,6 @@ function updateWorthChartStacked(months, assetLines = {}) {
 
   let colorIndex = 0;
 
-  // Create one bar trace per asset
   for (const assetId in assetLines) {
     const asset = assetLines[assetId];
 
@@ -430,35 +402,21 @@ function updateWorthChartStacked(months, assetLines = {}) {
       name: asset.name,
       type: "bar",
       marker: { color: colors[colorIndex++ % colors.length] },
-      plot_bgcolor: "#2c2c2c",
-      paper_bgcolor: "#2c2c2c",
-      font: { color: "#ffffff" },
     });
   }
 
   const layout = {
-    barmode: "stack", // stacked bars
+    barmode: "stack",
     xaxis: { automargin: true },
     yaxis: { automargin: true },
     legend: { orientation: "h" },
-
-    margin: {
-      l: 40, // left margin for y-axis labels
-      r: 10, // right margin
-      t: 10, // top margin
-      b: 30, // bottom margin for x-axis labels
-      pad: 0, // extra padding
-    },
-
-    font: { color: "#ffffff" }, // text color
-    paper_bgcolor: "#2c2c2c", // chart background
-    plot_bgcolor: "#2c2c2c", // inside plotting area background
+    margin: { l: 40, r: 10, t: 10, b: 30, pad: 0 },
+    font: { color: "#ffffff" },
+    paper_bgcolor: "#2c2c2c",
+    plot_bgcolor: "#2c2c2c",
   };
 
-  const config = {
-    displayModeBar: false,
-    responsive: true,
-  };
+  const config = { displayModeBar: false, responsive: true };
 
   Plotly.newPlot("worthChart", traces, layout, config);
 }
