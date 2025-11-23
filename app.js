@@ -452,6 +452,8 @@ function updateWorthChartStacked(months, assetLines = {}) {
     },
   ];
 
+  const chartHeight = 220; // same as your .chart container
+
   Plotly.newPlot(
     "worthChart",
     data,
