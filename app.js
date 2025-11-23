@@ -436,7 +436,7 @@ function updateWorthChartStacked(months, assetLines = {}) {
   }
 
   const layout = {
-    barmode: "stack",
+    barmode: "stack", // stacked bars
     xaxis: { automargin: true },
     yaxis: { automargin: true },
     legend: { orientation: "h" },
@@ -444,14 +444,14 @@ function updateWorthChartStacked(months, assetLines = {}) {
     margin: {
       l: 40, // left margin for y-axis labels
       r: 10, // right margin
-      t: 10, // top margin, reduce extra space
+      t: 10, // top margin
       b: 30, // bottom margin for x-axis labels
       pad: 0, // extra padding
     },
 
-    height: 220, // match your .chart div
-    width: 382,
-    autosize: false,
+    font: { color: "#ffffff" }, // text color
+    paper_bgcolor: "#2c2c2c", // chart background
+    plot_bgcolor: "#2c2c2c", // inside plotting area background
   };
 
   const config = {

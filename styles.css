@@ -43,10 +43,6 @@ body {
   height: 100% !important; /* Fill the .chart div */
 }
 
-#worthChart .main-svg {
-  background: #2c2c2c !important;
-}
-
 canvas#worthChart {
   width: 100% !important;
   height: 140px !important;
