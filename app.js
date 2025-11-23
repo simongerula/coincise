@@ -439,28 +439,14 @@ function updateWorthChartStacked(months, assetLines = {}) {
     legend: { orientation: "h" },
   };
 
-  const data = [
-    {
-      x: ["2025-11-01", "2025-11-02", "2025-11-03"], // dates
-      open: [100, 102, 101],
-      high: [105, 106, 103],
-      low: [99, 101, 100],
-      close: [104, 102, 101],
-      type: "candlestick", // type of trace
-      increasing: { line: { color: "green" } },
-      decreasing: { line: { color: "red" } },
-    },
-  ];
-
-  const chartHeight = 220; // same as your .chart container
-
   Plotly.newPlot(
     "worthChart",
-    data,
+    traces,
+    layout,
     {
-      margin: { l: 30, r: 10, t: 10, b: 20 },
       height: chartHeight, // <-- set height explicitly
       autosize: false, // <-- turn off autosize to respect height
+      //margin: { l: 30, r: 10, t: 10, b: 20 }, // reduce top margin
       xaxis: {
         automargin: true,
         showgrid: false,
@@ -469,7 +455,7 @@ function updateWorthChartStacked(months, assetLines = {}) {
         automargin: true,
         showgrid: true,
       },
-      plot_bgcolor: "#1e1e1e",
+      plot_bgcolor: "#1e1e1e", // match chart placeholder
       paper_bgcolor: "#1e1e1e",
     },
     { responsive: true }
