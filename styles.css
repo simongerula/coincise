@@ -488,4 +488,5 @@ button.minus:hover {
 #worthChart {
   width: 100% !important;
   height: 320px !important;
+  flex-shrink: 0;
 }
