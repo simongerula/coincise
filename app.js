@@ -277,59 +277,6 @@ async function loadAssets() {
   }
 }
 
-// async function loadWorthHistory(userId) {
-//   if (!userId) return;
-//   try {
-//     const response = await fetch(
-//       `https://coincise-api.simongerula.workers.dev/worth-history?accountId=${userId}`,
-//       { headers: getAuthHeaders() }
-//     );
-//     if (!response.ok) throw new Error("Failed to load worth history");
-
-//     const data = await response.json();
-//     const history = data.history || [];
-//     const change = data.changePercent;
-//     const worthChangeEl = document.getElementById("worthChange");
-
-//     const sorted = history.sort((a, b) => a.period.localeCompare(b.period));
-//     const months = sorted.map((item) => formatMonthLabel(item.period));
-//     const values = sorted.map((item) => item.worth);
-
-//     if (change !== null && values.length >= 2) {
-//       const lastWorth = values[values.length - 1];
-//       const prevWorth = values[values.length - 2];
-//       const absoluteChange = lastWorth - prevWorth;
-
-//       const formattedPercent = `${change >= 0 ? "+" : ""}${change.toFixed(
-//         1
-//       )}% since last month`;
-//       const formattedAmount = `${
-//         absoluteChange >= 0 ? "+" : ""
-//       }$${absoluteChange.toFixed(0)} since last month`;
-
-//       // default display → percentage
-//       worthChangeEl.textContent = formattedPercent;
-//       worthChangeEl.style.color = change >= 0 ? "green" : "red";
-
-//       // toggle on click
-//       let showingPercent = true;
-//       worthChangeEl.style.cursor = "pointer";
-//       worthChangeEl.title = "Click to toggle between % and $ change";
-//       worthChangeEl.onclick = () => {
-//         showingPercent = !showingPercent;
-//         worthChangeEl.textContent = showingPercent
-//           ? formattedPercent
-//           : formattedAmount;
-//       };
-//     } else {
-//       worthChangeEl.textContent = "";
-//     }
-
-//     updateWorthChart(values, months);
-//   } catch (error) {
-//     console.error("Error loading worth history:", error);
-//   }
-// }
 async function loadWorthHistory(userId) {
   if (!userId) return;
 
@@ -849,6 +796,7 @@ function showLoginCard() {
 }
 
 document.addEventListener("DOMContentLoaded", loadAssets);
+document.getElementById("addAssetBtn").addEventListener("click", addAsset);
 
 document.addEventListener("click", (e) => {
   if (!e.target.matches(".kebab-menu")) {
