@@ -64,9 +64,22 @@ async function loadAssets() {
 
       const nameSpan = document.createElement("span");
       nameSpan.className = "asset-name";
-      nameSpan.innerHTML = `<strong>${
-        asset.name
-      }</strong><br><span class="balance">$${asset.balance.toFixed(2)}</span>`;
+      // nameSpan.innerHTML = `<strong>${
+      //   asset.name
+      // }</strong><br><span class="balance">$${asset.balance.toFixed(2)}</span>`;
+
+      let html = `<strong>${asset.name}</strong><br>
+              <span class="balance">$${asset.balance.toFixed(2)}</span>`;
+
+      // Add annual interest if it's not 0
+      if (asset.annual_interest && asset.annual_interest !== 0) {
+        html += `<br><span class="annual-interest">${asset.annual_interest.toFixed(
+          2
+        )}% p.a.</span>`;
+      }
+
+      nameSpan.innerHTML = html;
+      div.appendChild(nameSpan);
 
       const buttonContainer = document.createElement("div");
       buttonContainer.className = "asset-buttons";

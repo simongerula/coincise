@@ -147,6 +147,13 @@ button.minus:hover {
   color: #00c49a;
 }
 
+.annual-interest {
+  font-size: 0.8rem; /* smaller than balance */
+  color: rgb(0, 128, 0); /* green */
+  margin-top: 0.1rem;
+  display: inline-block;
+}
+
 /* Loader styles */
 .loader {
   width: 48px;
