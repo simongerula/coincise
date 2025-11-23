@@ -434,7 +434,6 @@ function updateWorthChartStacked(months, assetLines = {}) {
 
   const layout = {
     barmode: "stack",
-    title: "Portfolio Composition per Month",
     xaxis: { title: "Month" },
     yaxis: { title: "Worth ($)" },
     legend: { orientation: "h" },
