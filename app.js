@@ -257,7 +257,7 @@ async function loadAssets() {
     });
 
     document.getElementById("total").textContent = total.toFixed(2);
-    updateWorthChart(total);
+    //updateWorthChart(total);
 
     if (userId) {
       await loadWorthHistory(userId);
@@ -405,82 +405,82 @@ function formatMonthLabel(period) {
   return date.toLocaleString("default", { month: "short", year: "numeric" });
 }
 
-function updateWorthChart(totalValues, months, assetLines = {}) {
-  const ctx = document.getElementById("worthChart");
-  if (window.worthLineChart) window.worthLineChart.destroy();
-  if (!totalValues || !totalValues.length) return;
+// function updateWorthChart(totalValues, months, assetLines = {}) {
+//   const ctx = document.getElementById("worthChart");
+//   if (window.worthLineChart) window.worthLineChart.destroy();
+//   if (!totalValues || !totalValues.length) return;
 
-  const datasets = [
-    {
-      label: "Total Worth",
-      data: totalValues,
-      borderColor: "rgb(75, 192, 192)",
-      tension: 0.3,
-      fill: false,
-      pointRadius: 4,
-      pointHoverRadius: 6,
-      borderWidth: 3,
-    },
-  ];
+//   const datasets = [
+//     {
+//       label: "Total Worth",
+//       data: totalValues,
+//       borderColor: "rgb(75, 192, 192)",
+//       tension: 0.3,
+//       fill: false,
+//       pointRadius: 4,
+//       pointHoverRadius: 6,
+//       borderWidth: 3,
+//     },
+//   ];
 
-  // Add asset lines
-  let colorIndex = 0;
-  const colors = [
-    "red",
-    "blue",
-    "orange",
-    "purple",
-    "green",
-    "yellow",
-    "pink",
-    "cyan",
-    "lime",
-    "magenta",
-  ];
+//   // Add asset lines
+//   let colorIndex = 0;
+//   const colors = [
+//     "red",
+//     "blue",
+//     "orange",
+//     "purple",
+//     "green",
+//     "yellow",
+//     "pink",
+//     "cyan",
+//     "lime",
+//     "magenta",
+//   ];
 
-  for (const assetId in assetLines) {
-    const asset = assetLines[assetId];
-    datasets.push({
-      label: asset.name,
-      data: asset.values,
-      borderColor: colors[colorIndex++ % colors.length],
-      tension: 0.3,
-      fill: false,
-      borderWidth: 2,
-      pointRadius: 3,
-      pointHoverRadius: 5,
-    });
-  }
+//   for (const assetId in assetLines) {
+//     const asset = assetLines[assetId];
+//     datasets.push({
+//       label: asset.name,
+//       data: asset.values,
+//       borderColor: colors[colorIndex++ % colors.length],
+//       tension: 0.3,
+//       fill: false,
+//       borderWidth: 2,
+//       pointRadius: 3,
+//       pointHoverRadius: 5,
+//     });
+//   }
 
-  window.worthLineChart = new Chart(ctx, {
-    type: "line",
-    data: {
-      labels: months,
-      datasets,
-    },
-    options: {
-      responsive: true,
-      maintainAspectRatio: true,
-      plugins: {
-        legend: { display: true },
-        tooltip: {
-          callbacks: {
-            label: (context) =>
-              `${context.dataset.label}: $${context.parsed.y?.toFixed(2)}`,
-          },
-        },
-      },
-      scales: {
-        y: {
-          beginAtZero: true,
-          ticks: {
-            callback: (value) => "$" + value.toFixed(2),
-          },
-        },
-      },
-    },
-  });
-}
+//   window.worthLineChart = new Chart(ctx, {
+//     type: "line",
+//     data: {
+//       labels: months,
+//       datasets,
+//     },
+//     options: {
+//       responsive: true,
+//       maintainAspectRatio: true,
+//       plugins: {
+//         legend: { display: true },
+//         tooltip: {
+//           callbacks: {
+//             label: (context) =>
+//               `${context.dataset.label}: $${context.parsed.y?.toFixed(2)}`,
+//           },
+//         },
+//       },
+//       scales: {
+//         y: {
+//           beginAtZero: true,
+//           ticks: {
+//             callback: (value) => "$" + value.toFixed(2),
+//           },
+//         },
+//       },
+//     },
+//   });
+// }
 
 function createLoader() {
   const container = document.createElement("div");
