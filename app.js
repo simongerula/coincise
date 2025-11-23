@@ -332,79 +332,115 @@ async function loadAssets() {
 // }
 async function loadWorthHistory(userId) {
   if (!userId) return;
+
   try {
     const response = await fetch(
       `https://coincise-api.simongerula.workers.dev/worth-history?accountId=${userId}`,
       { headers: getAuthHeaders() }
     );
+
     if (!response.ok) throw new Error("Failed to load worth history");
 
     const data = await response.json();
-
     const history = data.history || [];
-    const change = data.changePercent;
-    const periods = data.periods || [];
     const assetsHistory = data.assetsHistory || {};
 
-    const months = periods.map((p) => formatMonthLabel(p));
+    // --- Prepare user totals ---
+    const sorted = history.sort((a, b) => a.period.localeCompare(b.period));
+    const months = sorted.map((i) => formatMonthLabel(i.period));
+    const totalValues = sorted.map((i) => i.worth);
 
-    // Total values aligned to periods
-    const totalValues = periods.map((period) => {
-      const found = history.find((h) => h.period === period);
-      return found ? found.worth : null;
-    });
+    // --- Prepare each asset ---
+    const assetLines = {};
 
+    for (const assetId in assetsHistory) {
+      const entries = assetsHistory[assetId];
+
+      // The API sends: [{ period, worth, name }]
+      const sortedEntries = entries.sort((a, b) =>
+        a.period.localeCompare(b.period)
+      );
+
+      assetLines[assetId] = {
+        name: sortedEntries[0].name,
+        values: sortedEntries.map((e) => e.worth),
+      };
+    }
+
+    // --- Update chart (stacked bar) ---
+    updateWorthChartStacked(months, assetLines);
+
+    // --- Update top % change (optional) ---
+    const change = data.changePercent;
     const worthChangeEl = document.getElementById("worthChange");
 
     if (change !== null && totalValues.length >= 2) {
-      const lastWorth = totalValues[totalValues.length - 1];
-      const prevWorth = totalValues[totalValues.length - 2];
-      const absoluteChange = lastWorth - prevWorth;
+      const last = totalValues[totalValues.length - 1];
+      const prev = totalValues[totalValues.length - 2];
+      const abs = last - prev;
 
-      const formattedPercent = `${change >= 0 ? "+" : ""}${change.toFixed(
+      const pct = `${change >= 0 ? "+" : ""}${change.toFixed(
         1
       )}% since last month`;
-      const formattedAmount = `${
-        absoluteChange >= 0 ? "+" : ""
-      }$${absoluteChange.toFixed(0)} since last month`;
+      const amt = `${abs >= 0 ? "+" : ""}$${abs.toFixed(0)} since last month`;
 
-      worthChangeEl.textContent = formattedPercent;
+      worthChangeEl.textContent = pct;
       worthChangeEl.style.color = change >= 0 ? "green" : "red";
 
-      // toggle % / $
-      let showingPercent = true;
-      worthChangeEl.style.cursor = "pointer";
-      worthChangeEl.title = "Click to toggle between % and $ change";
       worthChangeEl.onclick = () => {
-        showingPercent = !showingPercent;
-        worthChangeEl.textContent = showingPercent
-          ? formattedPercent
-          : formattedAmount;
+        worthChangeEl.textContent = worthChangeEl.textContent.includes("%")
+          ? amt
+          : pct;
       };
     } else {
       worthChangeEl.textContent = "";
     }
-
-    const assetLines = {}; // will be passed to updateWorthChart()
-
-    for (const [assetId, records] of Object.entries(assetsHistory)) {
-      const assetName = records[0]?.name || `Asset ${assetId}`;
-
-      const alignedValues = periods.map((period) => {
-        const found = records.find((r) => r.period === period);
-        return found ? found.worth : null;
-      });
-
-      assetLines[assetId] = {
-        name: assetName,
-        values: alignedValues,
-      };
-    }
-
-    updateWorthChart(totalValues, months, assetLines);
-  } catch (error) {
-    console.error("Error loading worth history:", error);
+  } catch (err) {
+    console.error("Error loading worth history:", err);
   }
+}
+
+function updateWorthChartStacked(months, assetLines = {}) {
+  const traces = [];
+
+  // Colors for assets
+  const colors = [
+    "rgb(75, 192, 192)",
+    "rgb(255, 99, 132)",
+    "rgb(54, 162, 235)",
+    "rgb(255, 206, 86)",
+    "rgb(153, 102, 255)",
+    "rgb(255, 159, 64)",
+    "rgb(100, 255, 218)",
+    "rgb(144, 238, 144)",
+    "rgb(221, 160, 221)",
+    "rgb(135, 206, 250)",
+  ];
+
+  let colorIndex = 0;
+
+  // Create one bar trace per asset
+  for (const assetId in assetLines) {
+    const asset = assetLines[assetId];
+
+    traces.push({
+      x: months,
+      y: asset.values,
+      name: asset.name,
+      type: "bar",
+      marker: { color: colors[colorIndex++ % colors.length] },
+    });
+  }
+
+  const layout = {
+    barmode: "stack",
+    title: "Portfolio Composition per Month",
+    xaxis: { title: "Month" },
+    yaxis: { title: "Worth ($)" },
+    legend: { orientation: "h" },
+  };
+
+  Plotly.newPlot("worthChart", traces, layout);
 }
 
 function formatMonthLabel(period) {
