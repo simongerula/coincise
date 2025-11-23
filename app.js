@@ -446,7 +446,8 @@ function updateWorthChartStacked(months, assetLines = {}) {
       pad: 0, // extra padding
     },
 
-    height: 140, // match your .chart div
+    height: 220, // match your .chart div
+    width: 382,
     autosize: false,
   };
 
