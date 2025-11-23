@@ -439,27 +439,14 @@ function updateWorthChartStacked(months, assetLines = {}) {
     legend: { orientation: "h" },
   };
 
-  Plotly.newPlot(
-    "worthChart",
-    traces,
-    layout,
-    {
-      height: 220, // <-- set height explicitly
-      autosize: false, // <-- turn off autosize to respect height
-      //margin: { l: 30, r: 10, t: 10, b: 20 }, // reduce top margin
-      // xaxis: {
-      //   automargin: true,
-      //   showgrid: false,
-      // },
-      // yaxis: {
-      //   automargin: true,
-      //   showgrid: true,
-      // },
-      plot_bgcolor: "#1e1e1e", // match chart placeholder
-      paper_bgcolor: "#1e1e1e",
-    },
-    { responsive: true }
-  );
+  const config = {
+    displayModeBar: false, // hides the modebar completely
+  };
+
+  Plotly.newPlot("worthChart", traces, layout, config, {
+    height: 220, // <-- set height explicitly
+    autosize: false, // <-- turn off autosize to respect height
+  });
 }
 
 function formatMonthLabel(period) {
