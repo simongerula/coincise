@@ -440,7 +440,7 @@ function updateWorthChartStacked(months, assetLines = {}) {
     legend: { orientation: "h" },
   };
 
-  Plotly.newPlot("worthChart", traces, layout);
+  Plotly.newPlot("worthChart", traces, layout, { responsive: true });
 }
 
 function formatMonthLabel(period) {
