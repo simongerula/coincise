@@ -441,11 +441,11 @@ function updateWorthChartStacked(months, assetLines = {}) {
 
   Plotly.newPlot(
     "worthChart",
-    traces,
-    layout,
+    data,
     {
-      margin: { l: 30, r: 10, t: 10, b: 20 }, // reduce top margin
-      autosize: true,
+      margin: { l: 30, r: 10, t: 10, b: 20 },
+      height: chartHeight, // <-- set height explicitly
+      autosize: false, // <-- turn off autosize to respect height
       xaxis: {
         automargin: true,
         showgrid: false,
@@ -454,7 +454,7 @@ function updateWorthChartStacked(months, assetLines = {}) {
         automargin: true,
         showgrid: true,
       },
-      plot_bgcolor: "#1e1e1e", // match chart placeholder
+      plot_bgcolor: "#1e1e1e",
       paper_bgcolor: "#1e1e1e",
     },
     { responsive: true }
