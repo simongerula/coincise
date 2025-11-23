@@ -27,7 +27,6 @@ body {
   min-height: calc(100vh - 2rem);
 }
 
-/* Chart placeholder */
 .chart {
   height: 140px;
   background: #1e1e1e;
@@ -37,6 +36,11 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+#worthChart {
+  width: 100% !important;
+  height: 100% !important; /* Fill the .chart div */
 }
 
 canvas#worthChart {
@@ -477,16 +481,4 @@ button.minus:hover {
 /* Prevent checkbox from stretching */
 .inline-checkbox input[type="checkbox"] {
   width: auto;
-}
-
-.chart {
-  width: 100%;
-  max-width: 600px;
-  margin: 0 auto;
-}
-
-#worthChart {
-  width: 100% !important;
-  height: 320px !important;
-  flex-shrink: 0;
 }
