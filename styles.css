@@ -482,3 +482,7 @@ button.minus:hover {
 .inline-checkbox input[type="checkbox"] {
   width: auto;
 }
+
+g.legend {
+  margin-top: 15px;
+}
