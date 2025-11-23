@@ -356,14 +356,15 @@ async function loadWorthHistory(userId) {
     for (const assetId in assetsHistory) {
       const entries = assetsHistory[assetId];
 
-      // The API sends: [{ period, worth, name }]
-      const sortedEntries = entries.sort((a, b) =>
-        a.period.localeCompare(b.period)
-      );
+      // Create a lookup by period
+      const worthByPeriod = {};
+      entries.forEach((e) => {
+        worthByPeriod[e.period] = e.worth;
+      });
 
       assetLines[assetId] = {
-        name: sortedEntries[0].name,
-        values: sortedEntries.map((e) => e.worth),
+        name: entries[0].name,
+        values: months.map((m) => worthByPeriod[m] || 0), // map each month
       };
     }
 
