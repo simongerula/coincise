@@ -444,7 +444,7 @@ function updateWorthChartStacked(months, assetLines = {}) {
     traces,
     layout,
     {
-      height: chartHeight, // <-- set height explicitly
+      height: 220, // <-- set height explicitly
       autosize: false, // <-- turn off autosize to respect height
       //margin: { l: 30, r: 10, t: 10, b: 20 }, // reduce top margin
       xaxis: {
