@@ -434,19 +434,28 @@ function updateWorthChartStacked(months, assetLines = {}) {
 
   const layout = {
     barmode: "stack",
-    xaxis: { title: "Month" },
-    yaxis: { title: "Worth ($)" },
+    xaxis: { title: "Month", automargin: true },
+    yaxis: { title: "Worth ($)", automargin: true },
     legend: { orientation: "h" },
+
+    margin: {
+      l: 40, // left margin for y-axis labels
+      r: 10, // right margin
+      t: 10, // top margin, reduce extra space
+      b: 30, // bottom margin for x-axis labels
+      pad: 0, // extra padding
+    },
+
+    height: 140, // match your .chart div
+    autosize: false,
   };
 
   const config = {
-    displayModeBar: false, // hides the modebar completely
+    displayModeBar: false,
+    responsive: true,
   };
 
-  Plotly.newPlot("worthChart", traces, layout, config, {
-    height: 220, // <-- set height explicitly
-    autosize: false, // <-- turn off autosize to respect height
-  });
+  Plotly.newPlot("worthChart", traces, layout, config);
 }
 
 function formatMonthLabel(period) {
