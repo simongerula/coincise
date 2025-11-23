@@ -73,7 +73,7 @@ async function loadAssets() {
 
       // Add annual interest if it's not 0
       if (asset.annual_interest && asset.annual_interest !== 0) {
-        html += `<br><span class="annual-interest">${asset.annual_interest.toFixed(
+        html += ` <span class="annual-interest">${asset.annual_interest.toFixed(
           2
         )}% p.a.</span>`;
       }
