@@ -429,13 +429,16 @@ function updateWorthChartStacked(months, assetLines = {}) {
       name: asset.name,
       type: "bar",
       marker: { color: colors[colorIndex++ % colors.length] },
+      plot_bgcolor: "#2c2c2c",
+      paper_bgcolor: "#2c2c2c",
+      font: { color: "#ffffff" },
     });
   }
 
   const layout = {
     barmode: "stack",
-    xaxis: { title: "Month", automargin: true },
-    yaxis: { title: "Worth ($)", automargin: true },
+    xaxis: { automargin: true },
+    yaxis: { automargin: true },
     legend: { orientation: "h" },
 
     margin: {
