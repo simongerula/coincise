@@ -388,7 +388,7 @@ function updateWorthChartStacked(months, assetLines = {}) {
     xaxis: { automargin: true },
     yaxis: { automargin: true },
     legend: { orientation: "h" },
-    margin: { l: 40, r: 10, t: 10, b: 30, pad: 0 },
+    margin: { l: 40, r: 10, t: 10, b: 40, pad: 0 },
     font: { color: "#ffffff" },
     paper_bgcolor: "#2c2c2c",
     plot_bgcolor: "#2c2c2c",
