@@ -442,7 +442,8 @@ function updateWorthChartStacked(months, assetLines = {}) {
 
   Plotly.newPlot(
     "worthChart",
-    data,
+    traces,
+    layout,
     {
       margin: { l: 30, r: 10, t: 10, b: 30 },
       autosize: true,
