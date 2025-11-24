@@ -210,6 +210,21 @@ async function loadAssets() {
               }
             }
 
+            // ---- ADJUSTMENT LOGIC ----
+            else if (m.note === "Value adjustment") {
+              noteText = "Value adjustment";
+
+              if (asset.id === m.fromAssetId) {
+                // value decreased
+                sign = "-";
+                color = "red";
+              } else if (asset.id === m.toAssetId) {
+                // value increased
+                sign = "+";
+                color = "green";
+              }
+            }
+
             // ---- DEPOSIT / WITHDRAWAL ----
             else if (m.note === "Deposit") {
               sign = "+";
@@ -723,7 +738,7 @@ function showAddFundsModal(asset, index) {
         </label>
         <label class="inline-checkbox">
         <input type="checkbox" id="valueAdjustmentCheckbox" />
-        Value adjustment (don’t record movement)
+        Value adjustment?
         </label>
         <div class="modal-buttons">
           <button type="submit" class="btn-primary">Add</button>
@@ -782,7 +797,7 @@ function showSubtractFundsModal(asset, index) {
         </label>
         <label class="inline-checkbox">
         <input type="checkbox" id="valueAdjustmentCheckbox" />
-        Value adjustment (don’t record movement)
+        Value adjustment?
         </label>
 
         <div class="modal-buttons">
