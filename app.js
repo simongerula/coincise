@@ -30,25 +30,6 @@ async function loadAssets() {
   loader.style.display = "flex";
 
   try {
-    // const response = await fetch(
-    //   "https://coincise-api.simongerula.workers.dev/assets/",
-    //   {
-    //     method: "GET",
-    //     headers: getAuthHeaders(),
-    //   }
-    // );
-
-    // if (response.status === 403 || response.status === 401) {
-    //   localStorage.removeItem("auth_token");
-    //   showLoginCard();
-    //   return;
-    // }
-
-    // if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
-
-    // const data = await response.json();
-    // assets = data.assets;
-    // assets.sort((a, b) => b.balance - a.balance);
     const data = await fetchAssets(); // ✅ replaced direct fetch
     assets = data.assets;
     assets.sort((a, b) => b.balance - a.balance);
@@ -64,14 +45,10 @@ async function loadAssets() {
 
       const nameSpan = document.createElement("span");
       nameSpan.className = "asset-name";
-      // nameSpan.innerHTML = `<strong>${
-      //   asset.name
-      // }</strong><br><span class="balance">$${asset.balance.toFixed(2)}</span>`;
 
       let html = `<strong>${asset.name}</strong><br>
               <span class="balance">$${asset.balance.toFixed(2)}</span>`;
 
-      // Add annual interest if it's not 0
       if (asset.annual_interest && asset.annual_interest !== 0) {
         html += `<br><span class="annual-interest">${asset.annual_interest.toFixed(
           2
@@ -168,20 +145,18 @@ async function loadAssets() {
 
       container.appendChild(div);
 
-      // ✅ Movement container BELOW the asset card
       const movementContainer = document.createElement("div");
       movementContainer.className = "asset-movements";
       movementContainer.style.display = "none";
       container.appendChild(movementContainer);
 
       div.addEventListener("click", async (e) => {
-        if (e.target.closest(".asset-buttons")) return; // ignore kebab clicks
+        if (e.target.closest(".asset-buttons")) return;
 
         const assetId = div.dataset.assetId;
         if (!assetId) return;
 
         try {
-          // 🔥 CLOSE ANY OTHER OPEN MOVEMENT CONTAINER
           document.querySelectorAll(".asset-movements").forEach((mc) => {
             if (mc !== movementContainer) mc.style.display = "none";
           });
@@ -193,19 +168,16 @@ async function loadAssets() {
           if (!response.ok) throw new Error("Failed to fetch movements");
 
           const movements = await response.json();
-          movements.sort((a, b) => b.id - a.id); // descending by id
+          movements.sort((a, b) => b.id - a.id);
 
-          // clear previous
           movementContainer.innerHTML = "";
 
-          // no movements
           if (movements.length === 0) {
             const empty = document.createElement("div");
             empty.className = "movement-empty";
             empty.textContent = "No movements yet";
             movementContainer.appendChild(empty);
 
-            // toggle this container
             movementContainer.style.display =
               movementContainer.style.display === "none" ? "block" : "none";
 
@@ -270,7 +242,6 @@ async function loadAssets() {
     });
 
     document.getElementById("total").textContent = total.toFixed(2);
-    //updateWorthChart(total);
 
     if (userId) {
       await loadWorthHistory(userId);
@@ -418,83 +389,6 @@ function formatMonthLabel(period) {
   return date.toLocaleString("default", { month: "short", year: "numeric" });
 }
 
-// function updateWorthChart(totalValues, months, assetLines = {}) {
-//   const ctx = document.getElementById("worthChart");
-//   if (window.worthLineChart) window.worthLineChart.destroy();
-//   if (!totalValues || !totalValues.length) return;
-
-//   const datasets = [
-//     {
-//       label: "Total Worth",
-//       data: totalValues,
-//       borderColor: "rgb(75, 192, 192)",
-//       tension: 0.3,
-//       fill: false,
-//       pointRadius: 4,
-//       pointHoverRadius: 6,
-//       borderWidth: 3,
-//     },
-//   ];
-
-//   // Add asset lines
-//   let colorIndex = 0;
-//   const colors = [
-//     "red",
-//     "blue",
-//     "orange",
-//     "purple",
-//     "green",
-//     "yellow",
-//     "pink",
-//     "cyan",
-//     "lime",
-//     "magenta",
-//   ];
-
-//   for (const assetId in assetLines) {
-//     const asset = assetLines[assetId];
-//     datasets.push({
-//       label: asset.name,
-//       data: asset.values,
-//       borderColor: colors[colorIndex++ % colors.length],
-//       tension: 0.3,
-//       fill: false,
-//       borderWidth: 2,
-//       pointRadius: 3,
-//       pointHoverRadius: 5,
-//     });
-//   }
-
-//   window.worthLineChart = new Chart(ctx, {
-//     type: "line",
-//     data: {
-//       labels: months,
-//       datasets,
-//     },
-//     options: {
-//       responsive: true,
-//       maintainAspectRatio: true,
-//       plugins: {
-//         legend: { display: true },
-//         tooltip: {
-//           callbacks: {
-//             label: (context) =>
-//               `${context.dataset.label}: $${context.parsed.y?.toFixed(2)}`,
-//           },
-//         },
-//       },
-//       scales: {
-//         y: {
-//           beginAtZero: true,
-//           ticks: {
-//             callback: (value) => "$" + value.toFixed(2),
-//           },
-//         },
-//       },
-//     },
-//   });
-// }
-
 function createLoader() {
   const container = document.createElement("div");
   container.className = "loader-container";
@@ -578,19 +472,25 @@ async function addAsset() {
   });
 }
 
-function changeBalance(index, amount) {
+function changeBalance(index, amount, isValueAdjustment = false) {
   assets[index].balance += amount;
+
   fetch(
     `https://coincise-api.simongerula.workers.dev/assets/${assets[index].id}`,
     {
       method: "PUT",
       headers: getAuthHeaders(),
-      body: JSON.stringify({ balance: assets[index].balance }),
+      body: JSON.stringify({
+        balance: assets[index].balance,
+        isValueAdjustment: isValueAdjustment,
+      }),
     }
-  ).then((response) => {
-    if (!response.ok) throw new Error("Network response was not ok");
-    loadAssets();
-  });
+  )
+    .then((response) => {
+      if (!response.ok) throw new Error("Network response was not ok");
+      loadAssets();
+    })
+    .catch((err) => console.error(err));
 }
 
 function showLoginCard() {
@@ -857,8 +757,10 @@ function showAddFundsModal(asset, index) {
       return;
     }
 
-    // Call your existing logic
-    changeBalance(index, amount);
+    const isValueAdjustment = document.getElementById(
+      "valueAdjustmentCheckbox"
+    ).checked;
+    changeBalance(index, amount, isValueAdjustment);
 
     modal.remove();
   });
@@ -915,8 +817,10 @@ function showSubtractFundsModal(asset, index) {
       return;
     }
 
-    // Your logic uses negative values to subtract funds
-    changeBalance(index, -amount);
+    const isValueAdjustment = document.getElementById(
+      "valueAdjustmentCheckbox"
+    ).checked;
+    changeBalance(index, -amount, isValueAdjustment);
 
     modal.remove();
   });
