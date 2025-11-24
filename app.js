@@ -403,9 +403,10 @@ function updateWorthChartStacked(months, assetLines = {}) {
     legend: {
       orientation: "h",
       yanchor: "top",
-      y: -0.25, // move legend BELOW chart
-      // xanchor: "center",
-      // x: 0.5,
+      y: -0.25,
+      xanchor: "center",
+      x: 0.5,
+      itemwidth: 80,
     },
     margin: { l: 40, r: 10, t: 10, b: 60, pad: 0 },
     font: { color: "#ffffff" },
