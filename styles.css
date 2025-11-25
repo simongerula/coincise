@@ -489,3 +489,9 @@ button.minus:hover {
 .inline-checkbox input[type="checkbox"] {
   width: auto;
 }
+
+.asset-growth {
+  align-content: center;
+  font-size: 0.8rem;
+  color: rgb(0, 128, 0);
+}

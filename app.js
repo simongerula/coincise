@@ -74,7 +74,8 @@ async function loadAssets() {
       );
 
       const assetGrowth = document.createElement("span");
-      assetGrowth.className = `asset-growth-${asset.id}`;
+      assetGrowth.className = `asset-growth`;
+      assetGrowth.id = `asset-growth-${asset.id}`;
       assetGrowth.textContent = "";
 
       const kebabBtn = document.createElement("button");
@@ -355,7 +356,6 @@ async function loadWorthHistory(userId) {
 
       // ---- Calculate monthly change ----
 
-      console.log("Calculating monthly change for asset:", assetId, values);
       let pct = null;
       if (values.length >= 2) {
         const prev = values[values.length - 2];
@@ -946,11 +946,9 @@ function showTransferModal(fromAsset) {
 }
 
 function updateAssetGrowthUI(changes) {
-  console.log("Updating asset growth UI with changes:", changes);
-
   for (const assetId in changes) {
     const pct = changes[assetId];
-    const el = document.querySelector(`.asset-growth-${assetId}`);
+    const el = document.querySelector(`#asset-growth-${assetId}`);
 
     if (!el) continue;
     el.innerHTML = ""; // reset
