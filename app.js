@@ -459,8 +459,8 @@ async function addAsset() {
         </label>
 
         <label>
-          Initial Balance:
-          <input type="number" step="0.01" id="assetBalanceInput" required />
+          Does it have a annual return?
+          <input type="number" step="0.01" id="assetAnnualReturn" placeholder="Optional" />
         </label>
 
         <div class="modal-buttons">
