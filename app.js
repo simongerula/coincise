@@ -494,7 +494,8 @@ async function addAsset() {
       .getElementById("assetAnnualReturn")
       .value.trim();
 
-    console.log("Annual Return Input:", annualReturnInput);
+    const annualReturn =
+      annualReturnInput === "" ? null : Number(annualReturnInput);
 
     if (!name || isNaN(balance)) {
       alert("Please enter valid asset data");
@@ -507,7 +508,7 @@ async function addAsset() {
         {
           method: "POST",
           headers: getAuthHeaders(),
-          body: JSON.stringify({ name, balance }),
+          body: JSON.stringify({ name, balance, annualReturn }),
         }
       );
 
