@@ -974,6 +974,8 @@ function updateAssetGrowthUI(changes) {
     const pct = changes[assetId];
     const el = document.querySelector(`#asset-growth-${assetId}`);
 
+    console.log("Updating growth for asset", assetId, "to", pct);
+
     if (!el) continue;
     el.innerHTML = ""; // reset
 
