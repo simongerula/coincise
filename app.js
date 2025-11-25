@@ -984,8 +984,8 @@ function updateAssetGrowthUI(changes) {
 
     console.log("Updating growth for asset", assetId, "to", pct);
 
-    if (!el) continue;
-    el.innerHTML = ""; // reset
+    // if (!el) continue;
+    // el.innerHTML = ""; // reset
 
     if (pct === null) {
       // no data for previous month
