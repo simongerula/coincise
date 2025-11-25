@@ -28,6 +28,7 @@ async function loadAssets() {
 
   const loader = document.querySelector(".loader-container") || createLoader();
   loader.style.display = "flex";
+  document.getElementById("logoutBtn").style.display = "inline-block";
 
   try {
     const data = await fetchAssets(); // ✅ replaced direct fetch
@@ -753,11 +754,11 @@ document.addEventListener("DOMContentLoaded", loadAssets);
 document.getElementById("addAssetBtn").addEventListener("click", addAsset);
 document.getElementById("logoutBtn").addEventListener("click", logout);
 
-// function to logout should prompt confirmation and if true delete token and user from localstorage and reload page
 function logout() {
   if (confirm("Are you sure you want to log out?")) {
     localStorage.removeItem("auth_token");
     localStorage.removeItem("user_id");
+    document.getElementById("logoutBtn").style.display = "none";
     loadAssets();
   }
 }
