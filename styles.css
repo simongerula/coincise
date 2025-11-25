@@ -300,9 +300,18 @@ button.minus:hover {
   border-radius: 6px;
 }
 
+.logout-btn {
+  background: none;
+}
+
+.logout-btn:hover {
+  background: #00c49a5c;
+  cursor: pointer;
+}
+
 .logout-img {
-  width: 20px;
-  height: 20px;
+  width: 32px;
+  height: 32px;
 }
 
 .logo {
