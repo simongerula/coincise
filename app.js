@@ -944,6 +944,8 @@ function showTransferModal(fromAsset) {
 }
 
 function updateAssetGrowthUI(changes) {
+  console.log("Updating asset growth UI with changes:", changes);
+
   for (const assetId in changes) {
     const pct = changes[assetId];
     const el = document.querySelector(`.asset-growth-${assetId}`);
