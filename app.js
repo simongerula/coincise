@@ -299,8 +299,6 @@ async function loadWorthHistory(userId) {
     const change = data.changePercent;
     const assetsHistory = data.assetsHistory || {};
 
-    console.log("Assets history:", assetsHistory);
-
     const worthChangeEl = document.querySelector("#worthChange");
 
     // --- Prepare months and total values ---
@@ -359,8 +357,6 @@ async function loadWorthHistory(userId) {
       };
 
       // ---- Calculate monthly change ----
-      console.log("Calculating monthly change for asset", assetId, values);
-
       let pct = null;
       if (values.length >= 2) {
         const prev = values[values.length - 2];
@@ -373,8 +369,6 @@ async function loadWorthHistory(userId) {
 
       monthlyChanges[assetId] = pct;
     }
-
-    console.log("monthlyChanges:", monthlyChanges);
 
     // --- Update asset growth UI ---
     updateAssetGrowthUI(monthlyChanges);
@@ -508,8 +502,6 @@ async function addAsset() {
       alert("Please enter valid asset data");
       return;
     }
-
-    console.log("Adding asset:", { name, balance, annualReturn });
 
     try {
       const response = await fetch(
@@ -976,16 +968,9 @@ function showTransferModal(fromAsset) {
 }
 
 function updateAssetGrowthUI(changes) {
-  console.log("Updating asset growth UI with changes:", changes);
   Object.keys(changes).forEach((assetId) => {
-    console.log("Processing asset", assetId, "with change", changes[assetId]);
     const pct = changes[assetId];
     const el = document.querySelector(`#asset-growth-${assetId}`);
-
-    console.log("Updating growth for asset", assetId, "to", pct);
-
-    // if (!el) continue;
-    // el.innerHTML = ""; // reset
 
     if (pct === null) {
       // no data for previous month
