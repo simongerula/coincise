@@ -345,10 +345,12 @@ async function loadWorthHistory(userId) {
         worthByPeriod[e.period] = e.worth;
       });
 
+      const values = months.map((m) => worthByPeriod[m] || 0);
+
       // Build values aligned with months
       assetLines[assetId] = {
         name: entries[0].name,
-        values: months.map((m) => worthByPeriod[m] || 0), // 0 if no data for month
+        values: values,
       };
 
       // ---- Calculate monthly change ----
