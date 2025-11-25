@@ -977,7 +977,7 @@ function showTransferModal(fromAsset) {
 
 function updateAssetGrowthUI(changes) {
   console.log("Updating asset growth UI with changes:", changes);
-  for (const assetId in changes) {
+  Object.keys(changes).forEach((assetId) => {
     console.log("Processing asset", assetId, "with change", changes[assetId]);
     const pct = changes[assetId];
     const el = document.querySelector(`#asset-growth-${assetId}`);
@@ -1012,5 +1012,5 @@ function updateAssetGrowthUI(changes) {
 
     el.appendChild(icon);
     el.appendChild(document.createTextNode(`${pct.toFixed(1)}%`));
-  }
+  });
 }
