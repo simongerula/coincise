@@ -502,6 +502,8 @@ async function addAsset() {
       return;
     }
 
+    console.log("Adding asset:", { name, balance, annualReturn });
+
     try {
       const response = await fetch(
         "https://coincise-api.simongerula.workers.dev/assets/",
