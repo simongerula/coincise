@@ -359,6 +359,7 @@ async function loadWorthHistory(userId) {
       };
 
       // ---- Calculate monthly change ----
+      console.log("Calculating monthly change for asset", assetId, values);
 
       let pct = null;
       if (values.length >= 2) {
