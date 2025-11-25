@@ -73,6 +73,10 @@ async function loadAssets() {
         document.createTextNode(`${Math.round(percent)}%`)
       );
 
+      const assetGrowth = document.createElement("span");
+      assetGrowth.className = `asset-growth-${asset.id}`;
+      assetGrowth.textContent = "";
+
       const kebabBtn = document.createElement("button");
       kebabBtn.className = "kebab-menu";
       kebabBtn.innerHTML = "⋮";
@@ -137,6 +141,7 @@ async function loadAssets() {
       dropdown.appendChild(deleteAction);
 
       buttonContainer.appendChild(percentDiv);
+      buttonContainer.appendChild(assetGrowth);
       buttonContainer.appendChild(kebabBtn);
       buttonContainer.appendChild(dropdown);
 
@@ -329,6 +334,7 @@ async function loadWorthHistory(userId) {
 
     // --- Prepare each asset ---
     const assetLines = {};
+    const monthlyChanges = {}; // assetId → percent change
 
     for (const assetId in assetsHistory) {
       const entries = assetsHistory[assetId];
@@ -344,8 +350,23 @@ async function loadWorthHistory(userId) {
         name: entries[0].name,
         values: months.map((m) => worthByPeriod[m] || 0), // 0 if no data for month
       };
+
+      // ---- Calculate monthly change ----
+      let pct = null;
+      if (values.length >= 2) {
+        const prev = values[values.length - 2];
+        const curr = values[values.length - 1];
+
+        if (prev > 0) {
+          pct = ((curr - prev) / prev) * 100;
+        }
+      }
+
+      monthlyChanges[assetId] = pct;
     }
 
+    // --- Update asset growth UI ---
+    updateAssetGrowthUI(monthlyChanges);
     // --- Update chart ---
     updateWorthChartStacked(months, assetLines);
   } catch (err) {
@@ -918,4 +939,40 @@ function showTransferModal(fromAsset) {
       alert("Transfer failed");
     }
   };
+}
+
+function updateAssetGrowthUI(changes) {
+  for (const assetId in changes) {
+    const pct = changes[assetId];
+    const el = document.querySelector(`.asset-growth-${assetId}`);
+
+    if (!el) continue;
+    el.innerHTML = ""; // reset
+
+    if (pct === null) {
+      // no data for previous month
+      el.textContent = "";
+      return;
+    }
+
+    const icon = document.createElement("span");
+    icon.style.marginRight = "4px";
+
+    if (pct > 0) {
+      icon.textContent = "▲";
+      icon.style.color = "limegreen";
+      el.style.color = "limegreen";
+    } else if (pct < 0) {
+      icon.textContent = "▼";
+      icon.style.color = "red";
+      el.style.color = "red";
+    } else {
+      icon.textContent = "→";
+      icon.style.color = "#aaa";
+      el.style.color = "#aaa";
+    }
+
+    el.appendChild(icon);
+    el.appendChild(document.createTextNode(`${pct.toFixed(1)}%`));
+  }
 }
