@@ -458,6 +458,11 @@ async function addAsset() {
           <input type="number" step="0.01" id="assetBalanceInput" required />
         </label>
 
+        <label>
+          Initial Balance:
+          <input type="number" step="0.01" id="assetBalanceInput" required />
+        </label>
+
         <div class="modal-buttons">
           <button type="submit" class="btn-primary">Add Asset</button>
           <button type="button" id="closeAddAssetModal" class="btn-secondary">Cancel</button>
