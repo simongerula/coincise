@@ -374,6 +374,8 @@ async function loadWorthHistory(userId) {
       monthlyChanges[assetId] = pct;
     }
 
+    console.log("monthlyChanges:", monthlyChanges);
+
     // --- Update asset growth UI ---
     updateAssetGrowthUI(monthlyChanges);
     // --- Update chart ---
