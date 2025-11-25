@@ -459,7 +459,7 @@ async function addAsset() {
         </label>
 
         <label>
-          Does it have a annual return?
+          Does it have an annual return?
           <input type="number" step="0.01" id="assetAnnualReturn" placeholder="Optional" />
         </label>
 
@@ -490,6 +490,11 @@ async function addAsset() {
     const balance = parseFloat(
       document.getElementById("assetBalanceInput").value.trim()
     );
+    const annualReturnInput = document
+      .getElementById("assetAnnualReturn")
+      .value.trim();
+
+    console.log("Annual Return Input:", annualReturnInput);
 
     if (!name || isNaN(balance)) {
       alert("Please enter valid asset data");
