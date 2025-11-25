@@ -410,8 +410,8 @@ function updateWorthChartStacked(months, assetLines = {}) {
 
   const layout = {
     barmode: "stack",
-    xaxis: { automargin: true },
-    yaxis: { automargin: true },
+    xaxis: { automargin: true, type: "category", fixedrange: true },
+    yaxis: { automargin: true, fixedrange: true },
     legend: { orientation: "h", yanchor: "top", y: -0.25 },
     margin: { l: 40, r: 10, t: 10, b: 30, pad: 0 },
     font: { color: "#ffffff" },
@@ -419,7 +419,12 @@ function updateWorthChartStacked(months, assetLines = {}) {
     plot_bgcolor: "#2c2c2c",
   };
 
-  const config = { displayModeBar: false, responsive: true };
+  const config = {
+    displayModeBar: false,
+    responsive: true,
+    scrollZoom: false,
+    staticPlot: false,
+  };
 
   Plotly.newPlot("worthChart", traces, layout, config);
 }
