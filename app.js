@@ -900,10 +900,10 @@ function showTransferModal(fromAsset) {
       <h3>Transfer from ${fromAsset.name}</h3>
 
       <label>
-        Select target asset:
+        To:
         <select id="transferTargetAsset"></select>
       </label>
-
+      <br>
       <label>
         Amount:
         <input type="number" step="0.01" id="transferAmountInput" />
