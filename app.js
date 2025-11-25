@@ -8,15 +8,15 @@ function getAuthHeaders() {
   };
 }
 
-function getLastSixMonths() {
-  const months = [];
-  const today = new Date();
-  for (let i = 5; i >= 0; i--) {
-    const date = new Date(today.getFullYear(), today.getMonth() - i, 1);
-    months.push(date.toLocaleString("default", { month: "short" }));
-  }
-  return months;
-}
+// function getLastSixMonths() {
+//   const months = [];
+//   const today = new Date();
+//   for (let i = 5; i >= 0; i--) {
+//     const date = new Date(today.getFullYear(), today.getMonth() - i, 1);
+//     months.push(date.toLocaleString("default", { month: "short" }));
+//   }
+//   return months;
+// }
 
 async function loadAssets() {
   const token = localStorage.getItem("auth_token");
@@ -751,6 +751,16 @@ function showLoginCard() {
 
 document.addEventListener("DOMContentLoaded", loadAssets);
 document.getElementById("addAssetBtn").addEventListener("click", addAsset);
+document.getElementById("logoutBtn").addEventListener("click", logout);
+
+// function to logout should prompt confirmation and if true delete token and user from localstorage and reload page
+function logout() {
+  if (confirm("Are you sure you want to log out?")) {
+    localStorage.removeItem("auth_token");
+    localStorage.removeItem("user_id");
+    loadAssets();
+  }
+}
 
 document.addEventListener("click", (e) => {
   if (!e.target.matches(".kebab-menu")) {
