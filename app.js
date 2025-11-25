@@ -142,8 +142,8 @@ async function loadAssets() {
       dropdown.appendChild(transferAction);
       dropdown.appendChild(deleteAction);
 
-      buttonContainer.appendChild(percentDiv);
       buttonContainer.appendChild(assetGrowth);
+      buttonContainer.appendChild(percentDiv);
       buttonContainer.appendChild(kebabBtn);
       buttonContainer.appendChild(dropdown);
 
