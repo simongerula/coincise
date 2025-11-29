@@ -299,6 +299,7 @@ async function loadWorthHistory(userId) {
 
     // Build month → % change (total worth)
     const monthlyTotalChanges = []; // each entry: { month, pct }
+    console.log("Months:", months);
 
     for (let i = 1; i < months.length; i++) {
       const prev = totalValues[i - 1];
