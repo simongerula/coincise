@@ -768,7 +768,7 @@ document.getElementById("addAssetBtn").addEventListener("click", addAsset);
 document.getElementById("logoutBtn").addEventListener("click", logout);
 
 document.getElementById("yearChartBtn").onclick = () => {
-  document.getElementById("#monthGridModal").classList.remove("hidden");
+  document.querySelector("#monthGridModal").classList.remove("hidden");
 };
 
 document.querySelector("#closeMonthGrid").onclick = () => {
