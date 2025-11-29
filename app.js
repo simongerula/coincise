@@ -299,37 +299,33 @@ async function loadWorthHistory(userId) {
 
     // --- Build fixed Jan-Dec monthly change table ---
     const year = months[0]?.split("-")[0] || new Date().getFullYear();
-    const fixedMonths = [
-      `${year}-01`,
-      `${year}-02`,
-      `${year}-03`,
-      `${year}-04`,
-      `${year}-05`,
-      `${year}-06`,
-      `${year}-07`,
-      `${year}-08`,
-      `${year}-09`,
-      `${year}-10`,
-      `${year}-11`,
-      `${year}-12`,
-    ];
+    const fixedMonths = Array.from(
+      { length: 12 },
+      (_, i) => `${year}-${String(i + 1).padStart(2, "0")}`
+    );
 
-    // Build a lookup from your existing calculated changes
+    // Build lookup for pct and $ changes
     const changeLookup = {};
     for (let i = 1; i < months.length; i++) {
       const prev = totalValues[i - 1];
       const curr = totalValues[i];
 
       let pct = null;
-      if (prev > 0) pct = ((curr - prev) / prev) * 100;
+      let abs = null;
 
-      changeLookup[months[i]] = pct;
+      if (prev > 0) {
+        pct = ((curr - prev) / prev) * 100;
+        abs = curr - prev;
+      }
+
+      changeLookup[months[i]] = { pct, abs };
     }
 
-    // Build final full-year array (always 12 entries)
+    // Build final 12-month list
     const monthlyTotalChanges = fixedMonths.map((m) => ({
       month: m,
-      pct: changeLookup[m] ?? null,
+      pct: changeLookup[m]?.pct ?? null,
+      abs: changeLookup[m]?.abs ?? null,
     }));
 
     renderMonthGrid(monthlyTotalChanges);
@@ -1041,46 +1037,99 @@ function updateAssetGrowthUI(changes) {
   });
 }
 
+// function renderMonthGrid(changes) {
+//   const el = document.querySelector("#monthGridContainer");
+//   el.innerHTML = "";
+
+//   const monthNames = {
+//     "2024-01": "Jan",
+//     "2024-02": "Feb",
+//     "2024-03": "Mar",
+//     "2024-04": "Apr",
+//     "2024-05": "May",
+//     "2024-06": "Jun",
+//     "2024-07": "Jul",
+//     "2024-08": "Aug",
+//     "2024-09": "Sep",
+//     "2024-10": "Oct",
+//     "2024-11": "Nov",
+//     "2024-12": "Dec",
+//     // 2025 versions if needed
+//     "2025-01": "Jan",
+//     "2025-02": "Feb",
+//     "2025-03": "Mar",
+//     "2025-04": "Apr",
+//     "2025-05": "May",
+//     "2025-06": "Jun",
+//     "2025-07": "Jul",
+//     "2025-08": "Aug",
+//     "2025-09": "Sep",
+//     "2025-10": "Oct",
+//     "2025-11": "Nov",
+//     "2025-12": "Dec",
+//   };
+
+//   changes.forEach((entry) => {
+//     const short = monthNames[entry.month] || entry.month;
+
+//     let pctText = "–";
+//     let color = "#ccc";
+
+//     if (entry.pct !== null) {
+//       pctText = (entry.pct >= 0 ? "+" : "") + entry.pct.toFixed(1) + "%";
+//       color = entry.pct >= 0 ? "lightgreen" : "salmon";
+//     }
+
+//     const cell = document.createElement("div");
+//     cell.className = "month-cell";
+//     cell.innerHTML = `
+//       <div class="month-name">${short}</div>
+//       <div class="month-change" style="color:${color}">${pctText}</div>
+//     `;
+
+//     el.appendChild(cell);
+//   });
+// }
 function renderMonthGrid(changes) {
-  const el = document.querySelector("#monthGridContainer");
+  const el = document.getElementById("monthGridContainer");
+  if (!el) return;
+
   el.innerHTML = "";
 
   const monthNames = {
-    "2024-01": "Jan",
-    "2024-02": "Feb",
-    "2024-03": "Mar",
-    "2024-04": "Apr",
-    "2024-05": "May",
-    "2024-06": "Jun",
-    "2024-07": "Jul",
-    "2024-08": "Aug",
-    "2024-09": "Sep",
-    "2024-10": "Oct",
-    "2024-11": "Nov",
-    "2024-12": "Dec",
-    // 2025 versions if needed
-    "2025-01": "Jan",
-    "2025-02": "Feb",
-    "2025-03": "Mar",
-    "2025-04": "Apr",
-    "2025-05": "May",
-    "2025-06": "Jun",
-    "2025-07": "Jul",
-    "2025-08": "Aug",
-    "2025-09": "Sep",
-    "2025-10": "Oct",
-    "2025-11": "Nov",
-    "2025-12": "Dec",
+    "01": "Jan",
+    "02": "Feb",
+    "03": "Mar",
+    "04": "Apr",
+    "05": "May",
+    "06": "Jun",
+    "07": "Jul",
+    "08": "Aug",
+    "09": "Sep",
+    10: "Oct",
+    11: "Nov",
+    12: "Dec",
   };
 
   changes.forEach((entry) => {
-    const short = monthNames[entry.month] || entry.month;
+    const raw = entry.month.split("-")[1];
+    const short = monthNames[raw] ?? entry.month;
 
-    let pctText = "–";
+    let showingPercent = true;
+
+    function formatCell() {
+      if (entry.pct === null) return "–";
+
+      if (showingPercent) {
+        return (entry.pct >= 0 ? "+" : "") + entry.pct.toFixed(1) + "%";
+      }
+
+      const amt = entry.abs ?? 0;
+      return (amt >= 0 ? "+$" : "-$") + Math.abs(amt).toFixed(0);
+    }
+
     let color = "#ccc";
-
     if (entry.pct !== null) {
-      pctText = (entry.pct >= 0 ? "+" : "") + entry.pct.toFixed(1) + "%";
       color = entry.pct >= 0 ? "lightgreen" : "salmon";
     }
 
@@ -1088,8 +1137,19 @@ function renderMonthGrid(changes) {
     cell.className = "month-cell";
     cell.innerHTML = `
       <div class="month-name">${short}</div>
-      <div class="month-change" style="color:${color}">${pctText}</div>
+      <div class="month-change" style="color:${color}">
+        ${formatCell()}
+      </div>
     `;
+
+    // --- TOGGLE on click (%, $) ---
+    cell.onclick = () => {
+      if (entry.pct === null) return; // nothing to show
+
+      showingPercent = !showingPercent;
+      const changeEl = cell.querySelector(".month-change");
+      changeEl.innerHTML = formatCell();
+    };
 
     el.appendChild(cell);
   });
