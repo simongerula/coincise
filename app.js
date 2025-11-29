@@ -8,16 +8,6 @@ function getAuthHeaders() {
   };
 }
 
-// function getLastSixMonths() {
-//   const months = [];
-//   const today = new Date();
-//   for (let i = 5; i >= 0; i--) {
-//     const date = new Date(today.getFullYear(), today.getMonth() - i, 1);
-//     months.push(date.toLocaleString("default", { month: "short" }));
-//   }
-//   return months;
-// }
-
 async function loadAssets() {
   const token = localStorage.getItem("auth_token");
   const userId = localStorage.getItem("user_id");
@@ -29,6 +19,7 @@ async function loadAssets() {
   const loader = document.querySelector(".loader-container") || createLoader();
   loader.style.display = "flex";
   document.getElementById("logoutBtn").style.display = "inline-block";
+  document.getElementById("yearChartBtn").style.display = "inline-block";
 
   try {
     const data = await fetchAssets(); // ✅ replaced direct fetch
@@ -305,6 +296,25 @@ async function loadWorthHistory(userId) {
     const sorted = history.sort((a, b) => a.period.localeCompare(b.period));
     const months = sorted.map((i) => i.period); // use raw period for mapping
     const totalValues = sorted.map((i) => i.worth);
+
+    // Build month → % change (total worth)
+    const monthlyTotalChanges = []; // each entry: { month, pct }
+
+    for (let i = 1; i < months.length; i++) {
+      const prev = totalValues[i - 1];
+      const curr = totalValues[i];
+
+      let pct = null;
+      if (prev > 0) pct = ((curr - prev) / prev) * 100;
+
+      monthlyTotalChanges.push({
+        month: months[i],
+        pct,
+      });
+    }
+
+    // Render calendar grid
+    renderMonthGrid(monthlyTotalChanges);
 
     if (change !== null && totalValues.length >= 2) {
       const lastWorth = totalValues[totalValues.length - 1];
@@ -757,6 +767,14 @@ document.addEventListener("DOMContentLoaded", loadAssets);
 document.getElementById("addAssetBtn").addEventListener("click", addAsset);
 document.getElementById("logoutBtn").addEventListener("click", logout);
 
+document.getElementById("yearChartBtn").onclick = () => {
+  document.getElementById("#monthGridModal").classList.remove("hidden");
+};
+
+document.querySelector("#closeMonthGrid").onclick = () => {
+  document.querySelector("#monthGridModal").classList.add("hidden");
+};
+
 function logout() {
   if (confirm("Are you sure you want to log out?")) {
     localStorage.removeItem("auth_token");
@@ -1002,5 +1020,59 @@ function updateAssetGrowthUI(changes) {
 
     el.appendChild(icon);
     el.appendChild(document.createTextNode(`${pct.toFixed(1)}%`));
+  });
+}
+
+function renderMonthGrid(changes) {
+  const el = document.querySelector("#monthGridContainer");
+  el.innerHTML = "";
+
+  const monthNames = {
+    "2024-01": "Jan",
+    "2024-02": "Feb",
+    "2024-03": "Mar",
+    "2024-04": "Apr",
+    "2024-05": "May",
+    "2024-06": "Jun",
+    "2024-07": "Jul",
+    "2024-08": "Aug",
+    "2024-09": "Sep",
+    "2024-10": "Oct",
+    "2024-11": "Nov",
+    "2024-12": "Dec",
+    // 2025 versions if needed
+    "2025-01": "Jan",
+    "2025-02": "Feb",
+    "2025-03": "Mar",
+    "2025-04": "Apr",
+    "2025-05": "May",
+    "2025-06": "Jun",
+    "2025-07": "Jul",
+    "2025-08": "Aug",
+    "2025-09": "Sep",
+    "2025-10": "Oct",
+    "2025-11": "Nov",
+    "2025-12": "Dec",
+  };
+
+  changes.forEach((entry) => {
+    const short = monthNames[entry.month] || entry.month;
+
+    let pctText = "–";
+    let color = "#ccc";
+
+    if (entry.pct !== null) {
+      pctText = (entry.pct >= 0 ? "+" : "") + entry.pct.toFixed(1) + "%";
+      color = entry.pct >= 0 ? "lightgreen" : "salmon";
+    }
+
+    const cell = document.createElement("div");
+    cell.className = "month-cell";
+    cell.innerHTML = `
+      <div class="month-name">${short}</div>
+      <div class="month-change" style="color:${color}">${pctText}</div>
+    `;
+
+    el.appendChild(cell);
   });
 }
