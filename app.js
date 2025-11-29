@@ -297,10 +297,25 @@ async function loadWorthHistory(userId) {
     const months = sorted.map((i) => i.period); // use raw period for mapping
     const totalValues = sorted.map((i) => i.worth);
 
-    // Build month → % change (total worth)
-    const monthlyTotalChanges = []; // each entry: { month, pct }
-    console.log("Months:", months);
+    // --- Build fixed Jan-Dec monthly change table ---
+    const year = months[0]?.split("-")[0] || new Date().getFullYear();
+    const fixedMonths = [
+      `${year}-01`,
+      `${year}-02`,
+      `${year}-03`,
+      `${year}-04`,
+      `${year}-05`,
+      `${year}-06`,
+      `${year}-07`,
+      `${year}-08`,
+      `${year}-09`,
+      `${year}-10`,
+      `${year}-11`,
+      `${year}-12`,
+    ];
 
+    // Build a lookup from your existing calculated changes
+    const changeLookup = {};
     for (let i = 1; i < months.length; i++) {
       const prev = totalValues[i - 1];
       const curr = totalValues[i];
@@ -308,13 +323,15 @@ async function loadWorthHistory(userId) {
       let pct = null;
       if (prev > 0) pct = ((curr - prev) / prev) * 100;
 
-      monthlyTotalChanges.push({
-        month: months[i],
-        pct,
-      });
+      changeLookup[months[i]] = pct;
     }
 
-    // Render calendar grid
+    // Build final full-year array (always 12 entries)
+    const monthlyTotalChanges = fixedMonths.map((m) => ({
+      month: m,
+      pct: changeLookup[m] ?? null,
+    }));
+
     renderMonthGrid(monthlyTotalChanges);
 
     if (change !== null && totalValues.length >= 2) {
@@ -1025,8 +1042,6 @@ function updateAssetGrowthUI(changes) {
 }
 
 function renderMonthGrid(changes) {
-  console.log("GRID DATA:", changes); // ← should show an array of month objects
-
   const el = document.querySelector("#monthGridContainer");
   el.innerHTML = "";
 
