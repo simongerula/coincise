@@ -1024,6 +1024,8 @@ function updateAssetGrowthUI(changes) {
 }
 
 function renderMonthGrid(changes) {
+  console.log("GRID DATA:", changes); // ← should show an array of month objects
+
   const el = document.querySelector("#monthGridContainer");
   el.innerHTML = "";
 
