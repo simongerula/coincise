@@ -189,7 +189,7 @@ async function loadAssets() {
             let sign = "";
             let color = "#ffffff";
             let noteText = m.note;
-            const amount = `$${Math.abs(m.amount)}`;
+            const amount = `$${Math.abs(m.amount).toFixed(2)}`;
             const date = new Date(m.dateCreated).toLocaleDateString();
 
             // ---- TRANSFER LOGIC ----
