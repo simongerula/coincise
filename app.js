@@ -794,6 +794,7 @@ function logout() {
     localStorage.removeItem("auth_token");
     localStorage.removeItem("user_id");
     document.getElementById("logoutBtn").style.display = "none";
+    document.getElementById("yearChartBtn").style.display = "none";
     loadAssets();
   }
 }
