@@ -114,6 +114,8 @@ async function loadAssets() {
           current = sorted[sorted.length - 1].worth;
         }
 
+        console.log("Movements for asset:", movements);
+
         if (movements && movements.length > 0) {
           const sortedMovements = [...movements].sort((a, b) => a.id - b.id);
           const firstMove = sortedMovements[0];
