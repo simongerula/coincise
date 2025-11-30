@@ -110,8 +110,12 @@ async function loadAssets() {
           const sorted = history.sort((a, b) =>
             a.period.localeCompare(b.period)
           );
+
+          console.log("Sorted history for asset:", assetName, sorted);
           initial = sorted[0].worth;
+          console.log("Initial worth:", initial);
           current = sorted[sorted.length - 1].worth;
+          console.log("Current worth:", current);
         }
 
         updateTotalGainsModal(assetName, initial, current);
