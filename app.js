@@ -335,6 +335,8 @@ async function loadWorthHistory(userId) {
     // --- Prepare months and total values ---
     const sorted = history.sort((a, b) => a.period.localeCompare(b.period));
     const months = sorted.map((i) => i.period); // use raw period for mapping
+    const totalValues = sorted.map((i) => i.worth);
+
     // --- Build fixed Jan-Dec monthly change table ---
     const year = months[0]?.split("-")[0] || new Date().getFullYear();
     const fixedMonths = Array.from(
