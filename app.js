@@ -89,6 +89,11 @@ async function loadAssets() {
       showTotalGainsBtn.className = "dropdown-item";
       showTotalGainsBtn.textContent = "Total Gains";
 
+      showTotalGainsBtn.onclick = () => {
+        updateTotalGainsModal();
+        document.getElementById("totalGainsModal").classList.remove("hidden");
+      };
+
       const addAction = document.createElement("div");
       addAction.className = "dropdown-item";
       addAction.textContent = "Add funds";
@@ -793,11 +798,6 @@ document.getElementById("yearChartBtn").onclick = () => {
 document.querySelector("#closeMonthGrid").onclick = () => {
   document.querySelector("#monthGridModal").classList.add("hidden");
 };
-
-document.getElementById("showTotalGainsBtn").addEventListener("click", () => {
-  updateTotalGainsModal();
-  document.getElementById("totalGainsModal").classList.remove("hidden");
-});
 
 document.getElementById("closeTotalGains").addEventListener("click", () => {
   document.getElementById("totalGainsModal").classList.add("hidden");
