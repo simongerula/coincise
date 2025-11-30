@@ -85,6 +85,10 @@ async function loadAssets() {
       const dropdown = document.createElement("div");
       dropdown.className = "dropdown-content";
 
+      const showTotalGainsBtn = document.createElement("div");
+      showTotalGainsBtn.className = "dropdown-item";
+      showTotalGainsBtn.textContent = "Total Gains";
+
       const addAction = document.createElement("div");
       addAction.className = "dropdown-item";
       addAction.textContent = "Add funds";
@@ -128,6 +132,7 @@ async function loadAssets() {
         }
       };
 
+      dropdown.appendChild(showTotalGainsBtn);
       dropdown.appendChild(addAction);
       dropdown.appendChild(subtractAction);
       dropdown.appendChild(transferAction);
@@ -789,6 +794,52 @@ document.querySelector("#closeMonthGrid").onclick = () => {
   document.querySelector("#monthGridModal").classList.add("hidden");
 };
 
+document.getElementById("showTotalGainsBtn").addEventListener("click", () => {
+  updateTotalGainsModal();
+  document.getElementById("totalGainsModal").classList.remove("hidden");
+});
+
+document.getElementById("closeTotalGains").addEventListener("click", () => {
+  document.getElementById("totalGainsModal").classList.add("hidden");
+});
+
+function updateTotalGainsModal() {
+  const initial = initialTotalWorth;
+  const current = totalWorth;
+
+  const diff = current - initial;
+  const pct = ((diff / initial) * 100).toFixed(2);
+
+  const diffFormatted = diff.toFixed(2);
+  const pctFormatted = pct + "%";
+
+  const html = `
+    <div class="gain-line">
+      <strong>Initial Balance:</strong> $${initial.toFixed(2)}
+    </div>
+
+    <div class="gain-line">
+      <strong>Current Balance:</strong> $${current.toFixed(2)}
+    </div>
+
+    <div class="gain-line">
+      <strong>Change ($):</strong> 
+      <span style="color:${diff >= 0 ? "green" : "red"}">
+        ${diff >= 0 ? "+" : ""}$${diffFormatted}
+      </span>
+    </div>
+
+    <div class="gain-line">
+      <strong>Change (%):</strong>
+      <span style="color:${diff >= 0 ? "green" : "red"}">
+        ${diff >= 0 ? "+" : ""}${pctFormatted}
+      </span>
+    </div>
+  `;
+
+  document.getElementById("totalGainsContent").innerHTML = html;
+}
+
 function logout() {
   if (confirm("Are you sure you want to log out?")) {
     localStorage.removeItem("auth_token");
@@ -1038,59 +1089,6 @@ function updateAssetGrowthUI(changes) {
   });
 }
 
-// function renderMonthGrid(changes) {
-//   const el = document.querySelector("#monthGridContainer");
-//   el.innerHTML = "";
-
-//   const monthNames = {
-//     "2024-01": "Jan",
-//     "2024-02": "Feb",
-//     "2024-03": "Mar",
-//     "2024-04": "Apr",
-//     "2024-05": "May",
-//     "2024-06": "Jun",
-//     "2024-07": "Jul",
-//     "2024-08": "Aug",
-//     "2024-09": "Sep",
-//     "2024-10": "Oct",
-//     "2024-11": "Nov",
-//     "2024-12": "Dec",
-//     // 2025 versions if needed
-//     "2025-01": "Jan",
-//     "2025-02": "Feb",
-//     "2025-03": "Mar",
-//     "2025-04": "Apr",
-//     "2025-05": "May",
-//     "2025-06": "Jun",
-//     "2025-07": "Jul",
-//     "2025-08": "Aug",
-//     "2025-09": "Sep",
-//     "2025-10": "Oct",
-//     "2025-11": "Nov",
-//     "2025-12": "Dec",
-//   };
-
-//   changes.forEach((entry) => {
-//     const short = monthNames[entry.month] || entry.month;
-
-//     let pctText = "–";
-//     let color = "#ccc";
-
-//     if (entry.pct !== null) {
-//       pctText = (entry.pct >= 0 ? "+" : "") + entry.pct.toFixed(1) + "%";
-//       color = entry.pct >= 0 ? "lightgreen" : "salmon";
-//     }
-
-//     const cell = document.createElement("div");
-//     cell.className = "month-cell";
-//     cell.innerHTML = `
-//       <div class="month-name">${short}</div>
-//       <div class="month-change" style="color:${color}">${pctText}</div>
-//     `;
-
-//     el.appendChild(cell);
-//   });
-// }
 function renderMonthGrid(changes) {
   const el = document.getElementById("monthGridContainer");
   if (!el) return;
