@@ -108,7 +108,7 @@ async function loadAssets() {
         // if fromAssetId = assetId → subtract amount
         // if toAssetId = assetId → add amount
 
-        const assetDifference = 0;
+        let assetDifference = 0;
         movements.forEach((m) => {
           if (m.note === "Value adjustment") {
             if (m.fromAssetId === assetId) {
