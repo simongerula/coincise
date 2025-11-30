@@ -101,28 +101,45 @@ async function loadAssets() {
         const assetId = asset.id; // <--- from your existing render loop
         const assetName = asset.name;
 
-        const history = window.assetsHistory?.[assetId];
+        //const history = window.assetsHistory?.[assetId];
         const movements = window.assetMovements?.[assetId]; // <-- you must store this when loading movements
 
-        let initial = null;
-        let current = null;
+        // calculate sum of movements where "note": "Value adjustment"
+        // if fromAssetId = assetId → subtract amount
+        // if toAssetId = assetId → add amount
 
-        if (history && history.length > 0) {
-          const sorted = history.sort((a, b) =>
-            a.period.localeCompare(b.period)
-          );
-          current = sorted[sorted.length - 1].worth;
-        }
+        const assetDifference = 0;
+        movements.forEach((m) => {
+          if (m.note === "Value adjustment") {
+            if (m.fromAssetId === assetId) {
+              // value decreased
+              assetDifference -= Math.abs(m.amount);
+            } else if (m.toAssetId === assetId) {
+              // value increased
+              assetDifference += Math.abs(m.amount);
+            }
+          }
+        });
 
-        console.log("Movements for asset:", movements);
+        // let initial = null;
+        // let current = null;
 
-        if (movements && movements.length > 0) {
-          const sortedMovements = [...movements].sort((a, b) => a.id - b.id);
-          const firstMove = sortedMovements[0];
-          initial = Math.abs(firstMove.amount);
-        }
+        // if (history && history.length > 0) {
+        //   const sorted = history.sort((a, b) =>
+        //     a.period.localeCompare(b.period)
+        //   );
+        //   current = sorted[sorted.length - 1].worth;
+        // }
 
-        updateTotalGainsModal(assetName, initial, current);
+        // console.log("Movements for asset:", movements);
+
+        // if (movements && movements.length > 0) {
+        //   const sortedMovements = [...movements].sort((a, b) => a.id - b.id);
+        //   const firstMove = sortedMovements[0];
+        //   initial = Math.abs(firstMove.amount);
+        // }
+
+        updateTotalGainsModal(assetName, assetDifference);
         document.getElementById("totalGainsModal").classList.remove("hidden");
       };
 
@@ -841,38 +858,27 @@ document.getElementById("closeTotalGains").addEventListener("click", () => {
   document.getElementById("totalGainsModal").classList.add("hidden");
 });
 
-function updateTotalGainsModal(assetName, initialTotalWorth, totalWorth) {
-  if (initialTotalWorth == null || totalWorth == null) {
+function updateTotalGainsModal(assetName, assetDifference) {
+  if (!assetDifference) {
     document.getElementById("totalGainsContent").innerHTML =
       "<div class='gain-line'>No history available</div>";
     return;
+  } else if (assetDifference === 0) {
+    document.getElementById("totalGainsContent").innerHTML =
+      "<div class='gain-line'>No change detected</div>";
+    return;
   }
 
-  const diff = totalWorth - initialTotalWorth;
-  const pct = ((diff / initialTotalWorth) * 100).toFixed(2);
+  // const diff = totalWorth - initialTotalWorth;
+  // const pct = ((diff / initialTotalWorth) * 100).toFixed(2);
 
   const html = `
     <div class="gain-line"><strong>Asset:</strong> ${assetName}</div>
 
     <div class="gain-line">
-      <strong>Initial Balance:</strong> $${initialTotalWorth.toFixed(2)}
-    </div>
-
-    <div class="gain-line">
-      <strong>Current Balance:</strong> $${totalWorth.toFixed(2)}
-    </div>
-
-    <div class="gain-line">
       <strong>Change ($):</strong> 
-      <span style="color:${diff >= 0 ? "green" : "red"}">
-        ${diff >= 0 ? "+" : ""}$${diff.toFixed(2)}
-      </span>
-    </div>
-
-    <div class="gain-line">
-      <strong>Change (%):</strong>
-      <span style="color:${diff >= 0 ? "green" : "red"}">
-        ${diff >= 0 ? "+" : ""}${pct}%
+      <span style="color:${assetDifference >= 0 ? "green" : "red"}">
+        ${assetDifference >= 0 ? "+" : "-"}$${assetDifference.toFixed(2)}
       </span>
     </div>
   `;
