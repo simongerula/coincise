@@ -102,6 +102,7 @@ async function loadAssets() {
         const assetName = asset.name;
 
         const history = window.assetsHistory?.[assetId];
+        const movements = window.movements?.[assetId]; // <-- you must store this when loading movements
 
         let initial = null;
         let current = null;
@@ -110,12 +111,13 @@ async function loadAssets() {
           const sorted = history.sort((a, b) =>
             a.period.localeCompare(b.period)
           );
-
-          console.log("Sorted history for asset:", assetName, sorted);
-          initial = sorted[0].worth;
-          console.log("Initial worth:", initial);
           current = sorted[sorted.length - 1].worth;
-          console.log("Current worth:", current);
+        }
+
+        if (movements && movements.length > 0) {
+          const sortedMovements = [...movements].sort((a, b) => a.id - b.id);
+          const firstMove = sortedMovements[0];
+          initial = Math.abs(firstMove.amount);
         }
 
         updateTotalGainsModal(assetName, initial, current);
@@ -205,6 +207,9 @@ async function loadAssets() {
 
           const movements = await response.json();
           movements.sort((a, b) => b.id - a.id);
+
+          window.assetMovements = window.assetMovements || {};
+          window.assetMovements[asset.id] = movements;
 
           movementContainer.innerHTML = "";
 
