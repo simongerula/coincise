@@ -102,7 +102,7 @@ async function loadAssets() {
         const assetName = asset.name;
 
         const history = window.assetsHistory?.[assetId];
-        const movements = window.movements?.[assetId]; // <-- you must store this when loading movements
+        const movements = window.assetMovements?.[assetId]; // <-- you must store this when loading movements
 
         let initial = null;
         let current = null;
