@@ -85,12 +85,36 @@ async function loadAssets() {
       const dropdown = document.createElement("div");
       dropdown.className = "dropdown-content";
 
+      // const showTotalGainsBtn = document.createElement("div");
+      // showTotalGainsBtn.className = "dropdown-item";
+      // showTotalGainsBtn.textContent = "Total Gains";
+
+      // showTotalGainsBtn.onclick = () => {
+      //   updateTotalGainsModal();
+      //   document.getElementById("totalGainsModal").classList.remove("hidden");
+      // };
       const showTotalGainsBtn = document.createElement("div");
       showTotalGainsBtn.className = "dropdown-item";
       showTotalGainsBtn.textContent = "Total Gains";
 
       showTotalGainsBtn.onclick = () => {
-        updateTotalGainsModal();
+        const assetId = asset.id; // <--- from your existing render loop
+        const assetName = asset.name;
+
+        const history = window.assetsHistory?.[assetId];
+
+        let initial = null;
+        let current = null;
+
+        if (history && history.length > 0) {
+          const sorted = history.sort((a, b) =>
+            a.period.localeCompare(b.period)
+          );
+          initial = sorted[0].worth;
+          current = sorted[sorted.length - 1].worth;
+        }
+
+        updateTotalGainsModal(assetName, initial, current);
         document.getElementById("totalGainsModal").classList.remove("hidden");
       };
 
@@ -300,13 +324,13 @@ async function loadWorthHistory(userId) {
     const change = data.changePercent;
     const assetsHistory = data.assetsHistory || {};
 
+    window.assetsHistory = assetsHistory;
+
     const worthChangeEl = document.querySelector("#worthChange");
 
     // --- Prepare months and total values ---
     const sorted = history.sort((a, b) => a.period.localeCompare(b.period));
     const months = sorted.map((i) => i.period); // use raw period for mapping
-    const totalValues = sorted.map((i) => i.worth);
-
     // --- Build fixed Jan-Dec monthly change table ---
     const year = months[0]?.split("-")[0] || new Date().getFullYear();
     const fixedMonths = Array.from(
@@ -585,6 +609,7 @@ function changeBalance(index, amount, isValueAdjustment = false) {
 }
 
 function showLoginCard() {
+  delete window.assetsHistory;
   const chart = document.querySelector(".chart");
   const actionButtons = document.querySelector(".action-buttons");
   const totalCard = document.querySelector(".total-card");
@@ -803,36 +828,38 @@ document.getElementById("closeTotalGains").addEventListener("click", () => {
   document.getElementById("totalGainsModal").classList.add("hidden");
 });
 
-function updateTotalGainsModal() {
-  const initial = initialTotalWorth;
-  const current = totalWorth;
+function updateTotalGainsModal(assetName, initialTotalWorth, totalWorth) {
+  if (initialTotalWorth == null || totalWorth == null) {
+    document.getElementById("totalGainsContent").innerHTML =
+      "<div class='gain-line'>No history available</div>";
+    return;
+  }
 
-  const diff = current - initial;
-  const pct = ((diff / initial) * 100).toFixed(2);
-
-  const diffFormatted = diff.toFixed(2);
-  const pctFormatted = pct + "%";
+  const diff = totalWorth - initialTotalWorth;
+  const pct = ((diff / initialTotalWorth) * 100).toFixed(2);
 
   const html = `
+    <div class="gain-line"><strong>Asset:</strong> ${assetName}</div>
+
     <div class="gain-line">
-      <strong>Initial Balance:</strong> $${initial.toFixed(2)}
+      <strong>Initial Balance:</strong> $${initialTotalWorth.toFixed(2)}
     </div>
 
     <div class="gain-line">
-      <strong>Current Balance:</strong> $${current.toFixed(2)}
+      <strong>Current Balance:</strong> $${totalWorth.toFixed(2)}
     </div>
 
     <div class="gain-line">
       <strong>Change ($):</strong> 
       <span style="color:${diff >= 0 ? "green" : "red"}">
-        ${diff >= 0 ? "+" : ""}$${diffFormatted}
+        ${diff >= 0 ? "+" : ""}$${diff.toFixed(2)}
       </span>
     </div>
 
     <div class="gain-line">
       <strong>Change (%):</strong>
       <span style="color:${diff >= 0 ? "green" : "red"}">
-        ${diff >= 0 ? "+" : ""}${pctFormatted}
+        ${diff >= 0 ? "+" : ""}${pct}%
       </span>
     </div>
   `;
@@ -842,6 +869,7 @@ function updateTotalGainsModal() {
 
 function logout() {
   if (confirm("Are you sure you want to log out?")) {
+    delete window.assetsHistory;
     localStorage.removeItem("auth_token");
     localStorage.removeItem("user_id");
     document.getElementById("logoutBtn").style.display = "none";
