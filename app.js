@@ -909,6 +909,10 @@ document.getElementById("profitsBtn").onclick = () => {
   document.querySelector("#profitsModal").classList.remove("hidden");
 };
 
+document.querySelector("#closeProfitsModal").onclick = () => {
+  document.querySelector("#profitsModal").classList.add("hidden");
+};
+
 document.getElementById("yearChartBtn").onclick = () => {
   document.querySelector("#monthGridModal").classList.remove("hidden");
 };
