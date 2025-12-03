@@ -301,7 +301,8 @@ button.minus:hover {
 }
 
 .logout-btn,
-.year-chart-btn {
+.year-chart-btn,
+.profits-btn {
   background: none;
 }
 
@@ -311,9 +312,10 @@ button.minus:hover {
 }
 
 .logout-img,
-.year-chart-img {
-  width: 32px;
-  height: 32px;
+.year-chart-img,
+.profits-btn-img {
+  width: 28px;
+  height: 28px;
 }
 
 .logo {

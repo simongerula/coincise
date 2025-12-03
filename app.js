@@ -18,6 +18,7 @@ async function loadAssets() {
 
   const loader = document.querySelector(".loader-container") || createLoader();
   loader.style.display = "flex";
+  document.getElementById("profitsBtn").style.display = "inline-block";
   document.getElementById("logoutBtn").style.display = "inline-block";
   document.getElementById("yearChartBtn").style.display = "inline-block";
 
@@ -351,6 +352,64 @@ async function loadWorthHistory(userId) {
     const history = data.history || [];
     const change = data.changePercent;
     const assetsHistory = data.assetsHistory || {};
+
+    const assetGrowthValues = {}; // assetId -> growth amount
+
+    for (const assetId in assetsHistory) {
+      const entries = assetsHistory[assetId];
+
+      if (!entries || entries.length === 0) {
+        assetGrowthValues[assetId] = 0;
+        continue;
+      }
+
+      const firstWorth = entries[0].worth;
+      const lastWorth = entries[entries.length - 1].worth;
+
+      // Get movements for this asset
+      const movements = window.assetMovements?.[assetId] || [];
+
+      // Sum deposits and withdrawals
+      const depositWithdrawals = movements.reduce((sum, m) => {
+        if (m.note === "Deposit" || m.note === "Withdrawal") {
+          if (m.fromAssetId === Number(assetId)) sum -= Math.abs(m.amount);
+          else if (m.toAssetId === Number(assetId)) sum += Math.abs(m.amount);
+        }
+        return sum;
+      }, 0);
+
+      // True growth = last - first - deposits/withdrawals
+      const growth = lastWorth - firstWorth - depositWithdrawals;
+
+      assetGrowthValues[assetId] = growth;
+    }
+
+    const userTotalGrowth = Object.values(assetGrowthValues).reduce(
+      (a, b) => a + b,
+      0
+    );
+
+    const container = document.getElementById("profitsContainer");
+    container.innerHTML = "";
+
+    // Total
+    const totalDiv = document.createElement("div");
+    totalDiv.textContent = `Total profit: ${
+      userTotalGrowth >= 0 ? "+" : "-"
+    }$${Math.abs(userTotalGrowth).toFixed(0)}`;
+    container.appendChild(totalDiv);
+
+    // Each asset
+    for (const assetId in assetGrowthValues) {
+      const growth = assetGrowthValues[assetId];
+      const assetName = assetsHistory[assetId][0].name;
+
+      const div = document.createElement("div");
+      div.textContent = `${assetName}: ${growth >= 0 ? "+" : "-"}$${Math.abs(
+        growth
+      ).toFixed(0)}`;
+      container.appendChild(div);
+    }
 
     window.assetsHistory = assetsHistory;
 
@@ -846,6 +905,10 @@ document.addEventListener("DOMContentLoaded", loadAssets);
 document.getElementById("addAssetBtn").addEventListener("click", addAsset);
 document.getElementById("logoutBtn").addEventListener("click", logout);
 
+document.getElementById("profitsBtn").onclick = () => {
+  document.querySelector("#profitsModal").classList.remove("hidden");
+};
+
 document.getElementById("yearChartBtn").onclick = () => {
   document.querySelector("#monthGridModal").classList.remove("hidden");
 };
@@ -893,6 +956,7 @@ function logout() {
     localStorage.removeItem("user_id");
     document.getElementById("logoutBtn").style.display = "none";
     document.getElementById("yearChartBtn").style.display = "none";
+    document.getElementById("profitsBtn").style.display = "none";
     loadAssets();
   }
 }
