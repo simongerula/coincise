@@ -363,8 +363,8 @@ async function loadWorthHistory(userId) {
         continue;
       }
 
-      const firstWorth = entries[0].worth;
-      const lastWorth = entries[entries.length - 1].worth;
+      const firstWorth = entries[0].growth;
+      const lastWorth = entries[entries.length - 1].growth;
 
       // Get movements for this asset
       const movements = window.assetMovements?.[assetId] || [];
