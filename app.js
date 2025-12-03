@@ -363,8 +363,9 @@ async function loadWorthHistory(userId) {
         continue;
       }
 
-      const firstWorth = entries[0].growth;
-      const lastWorth = entries[entries.length - 1].growth;
+      // Use worth, not growth
+      const firstWorth = entries[entries.length - 1].worth; // oldest
+      const lastWorth = entries[0].worth; // latest
 
       // Get movements for this asset
       const movements = window.assetMovements?.[assetId] || [];
@@ -384,6 +385,7 @@ async function loadWorthHistory(userId) {
       assetGrowthValues[assetId] = growth;
     }
 
+    // Total growth
     const userTotalGrowth = Object.values(assetGrowthValues).reduce(
       (a, b) => a + b,
       0
