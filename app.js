@@ -5,7 +5,7 @@ import { showFailedToLoadAssets } from "./src/utils/error.js";
 import { renderAssets } from "./src/components/renderAssets.js";
 import { fetchAssets } from "./src/api/assets.js";
 
-async function loadAssets() {
+export async function loadAssets() {
   console.log("Loading assets...");
 
   const token = localStorage.getItem("auth_token");
