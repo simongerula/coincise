@@ -18,7 +18,7 @@ export function showLoginCard() {
 
   const loginCardContainer = document.getElementById("loginCardContainer");
   loginCardContainer.style.display = "block";
-  container.innerHTML = `
+  loginCardContainer.innerHTML = `
     <div class="auth-card">
       <h2>Authentication Required</h2>
       <p>
@@ -81,17 +81,18 @@ export function showLoginCard() {
     </div>
   `;
 
-  const loginLink = container.querySelector("#loginLink");
-  const signupLink = container.querySelector("#signupLink");
+  const loginLink = loginCardContainer.querySelector("#loginLink");
+  const signupLink = loginCardContainer.querySelector("#signupLink");
 
-  const loginModal = container.querySelector("#loginModal");
-  const signupModal = container.querySelector("#signupModal");
+  const loginModal = loginCardContainer.querySelector("#loginModal");
+  const signupModal = loginCardContainer.querySelector("#signupModal");
 
-  const closeLoginModal = container.querySelector("#closeLoginModal");
-  const closeSignupModal = container.querySelector("#closeSignupModal");
+  const closeLoginModal = loginCardContainer.querySelector("#closeLoginModal");
+  const closeSignupModal =
+    loginCardContainer.querySelector("#closeSignupModal");
 
-  const loginForm = container.querySelector("#loginForm");
-  const signupForm = container.querySelector("#signupForm");
+  const loginForm = loginCardContainer.querySelector("#loginForm");
+  const signupForm = loginCardContainer.querySelector("#signupForm");
 
   // Open modals
   loginLink.addEventListener("click", (e) => {
