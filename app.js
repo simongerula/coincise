@@ -1,6 +1,6 @@
-import { showLoader, hideLoader } from "./src/utils/loader";
-import { showLoginCard } from "./src/utils/auth";
-import { showHeaderButtons } from "./src/components/header";
+import { showLoader, hideLoader } from "./src/utils/loader.js";
+import { showLoginCard } from "./src/utils/auth.js";
+import { showHeaderButtons } from "./src/components/header.js";
 
 async function loadAssets() {
   const token = localStorage.getItem("auth_token");
@@ -11,10 +11,14 @@ async function loadAssets() {
     return;
   }
 
+  // show header buttons
+  showHeaderButtons();
+
   // Show loader
   showLoader();
-  showHeaderButtons();
 }
+
+document.addEventListener("DOMContentLoaded", loadAssets);
 
 // function getAuthHeaders() {
 //   const token = localStorage.getItem("auth_token");
