@@ -1,3 +1,6 @@
+import { login, signup } from "../api/auth.js";
+import { loadAssets } from "../app.js";
+
 /**
  * Show login card
  */
@@ -11,7 +14,11 @@ export function showLoginCard() {
   if (actionButtons) actionButtons.style.display = "none";
   if (totalCard) totalCard.style.display = "none";
 
-  const container = document.getElementById("assets");
+  const assetsContainer = document.getElementById("assets");
+  assetsContainer.style.display = "none";
+
+  const loginCardContainer = document.getElementById("loginCardContainer");
+  loginCardContainer.style.display = "block";
   container.innerHTML = `
     <div class="auth-card">
       <h2>Authentication Required</h2>
@@ -116,14 +123,7 @@ export function showLoginCard() {
     if (!username || !password) return alert("Please enter both fields");
 
     try {
-      const response = await fetch(
-        "https://coincise-api.simongerula.workers.dev/auth",
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ username, password }),
-        }
-      );
+      const response = await login(username, password);
 
       if (response.status === 201) {
         const data = await response.json();
@@ -162,14 +162,7 @@ export function showLoginCard() {
     if (password !== password2) return alert("Passwords do not match");
 
     try {
-      const response = await fetch(
-        "https://coincise-api.simongerula.workers.dev/signup",
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ email, username, password }),
-        }
-      );
+      const response = await signup(email, username, password);
 
       if (response.status === 201) {
         // Hide signup modal
