@@ -3,6 +3,7 @@ import { showLoginCard } from "./src/utils/auth.js";
 import { showHeaderButtons } from "./src/components/header.js";
 import { showFailedToLoadAssets } from "./src/utils/error.js";
 import { renderAssets } from "./src/components/renderAssets.js";
+import { fetchAssets } from "./src/utils/api.js";
 
 async function loadAssets() {
   const token = localStorage.getItem("auth_token");
