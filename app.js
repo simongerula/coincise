@@ -26,6 +26,8 @@ async function loadAssets() {
     assets.sort((a, b) => b.balance - a.balance);
     const total = data.totalWorth || 0;
 
+    console.log("Fetched assets:", assets);
+
     const container = document.getElementById("assets");
     container.innerHTML = "";
 
