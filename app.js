@@ -1,5 +1,5 @@
 import { showLoader, hideLoader } from "./src/utils/loader.js";
-import { showLoginCard } from "./src/utils/auth.js";
+import { showLoginCard } from "./src/components/loginCard.js";
 import { showHeaderButtons } from "./src/components/header.js";
 import { showFailedToLoadAssets } from "./src/utils/error.js";
 import { renderAssets } from "./src/components/renderAssets.js";
