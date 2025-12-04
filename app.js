@@ -1,6 +1,8 @@
 import { showLoader, hideLoader } from "./src/utils/loader.js";
 import { showLoginCard } from "./src/utils/auth.js";
 import { showHeaderButtons } from "./src/components/header.js";
+import { showFailedToLoadAssets } from "./src/utils/error.js";
+import { renderAssets } from "./src/components/renderAssets.js";
 
 async function loadAssets() {
   const token = localStorage.getItem("auth_token");
@@ -16,6 +18,27 @@ async function loadAssets() {
 
   // Show loader
   showLoader();
+
+  try {
+    const data = await fetchAssets();
+    assets = data.assets;
+    assets.sort((a, b) => b.balance - a.balance);
+    const total = data.totalWorth || 0;
+
+    const container = document.getElementById("assets");
+    container.innerHTML = "";
+
+    renderAssets(assets, total);
+  } catch (error) {
+    if (error instanceof Error && error.message === "Unauthorized") {
+      localStorage.removeItem("auth_token");
+      showLoginCard();
+      return;
+    }
+    showFailedToLoadAssets();
+  } finally {
+    hideLoader();
+  }
 }
 
 document.addEventListener("DOMContentLoaded", loadAssets);
