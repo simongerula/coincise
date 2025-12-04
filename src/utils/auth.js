@@ -13,3 +13,13 @@ export async function getAuthHeaders() {
     "Content-Type": "application/json",
   };
 }
+
+/**
+ * Show login card
+ */
+export function showLoginCard() {
+  const loginCard = document.getElementById("loginCard");
+  if (loginCard) {
+    loginCard.style.display = "block";
+  }
+}
