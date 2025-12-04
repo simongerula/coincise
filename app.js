@@ -6,9 +6,12 @@ import { renderAssets } from "./src/components/renderAssets.js";
 import { fetchAssets } from "./src/api/assets.js";
 
 async function loadAssets() {
+  console.log("Loading assets...");
+
   const token = localStorage.getItem("auth_token");
   const userId = localStorage.getItem("user_id");
   if (!token) {
+    console.log("No auth token found.");
     // No token, show login
     showLoginCard();
     return;
@@ -21,6 +24,7 @@ async function loadAssets() {
   showLoader();
 
   try {
+    console.log("Fetching assets from API...");
     const data = await fetchAssets();
     assets = data.assets;
     assets.sort((a, b) => b.balance - a.balance);
@@ -44,7 +48,7 @@ async function loadAssets() {
   }
 }
 
-document.addEventListener("DOMContentLoaded", loadAssets());
+document.addEventListener("DOMContentLoaded", loadAssets);
 
 // function getAuthHeaders() {
 //   const token = localStorage.getItem("auth_token");
