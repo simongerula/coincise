@@ -1,6 +1,5 @@
 import { login, signup } from "../api/auth.js";
-import { loadAssets } from "../app.js";
-
+import { loadAssets } from "../../app.js";
 /**
  * Show login card
  */
