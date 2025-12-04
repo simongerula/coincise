@@ -44,7 +44,7 @@ async function loadAssets() {
   }
 }
 
-document.addEventListener("DOMContentLoaded", loadAssets);
+document.addEventListener("DOMContentLoaded", loadAssets());
 
 // function getAuthHeaders() {
 //   const token = localStorage.getItem("auth_token");
