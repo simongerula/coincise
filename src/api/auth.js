@@ -1,4 +1,4 @@
-import { BASE_URL } from "../utils/auth";
+import { BASE_URL } from "../utils/auth.js";
 
 /**
  * User login
