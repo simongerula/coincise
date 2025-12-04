@@ -1,4 +1,4 @@
-import { BASE_URL, getAuthHeaders } from "../utils/auth";
+import { BASE_URL, getAuthHeaders } from "../utils/auth.js";
 
 /**
  * Fetches all assets and total worth

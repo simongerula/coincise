@@ -1,4 +1,4 @@
-import { BASE_URL, getAuthHeaders } from "../utils/auth";
+import { BASE_URL, getAuthHeaders } from "../utils/auth.js";
 
 /**
  * Fetches movements for a specific asset
