@@ -5,7 +5,7 @@ import { BASE_URL, getAuthHeaders } from "../utils/auth.js";
  */
 export async function fetchAssets() {
   const response = await fetch(`${BASE_URL}/assets/`, {
-    headers: getAuthHeaders(),
+    headers: await getAuthHeaders(),
   });
   if (response.status === 401 || response.status === 403) {
     throw new Error("Unauthorized");
