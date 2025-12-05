@@ -125,22 +125,15 @@ export function showLoginCard() {
     try {
       const response = await login(username, password);
 
-      console.log("Login response:", response);
-      console.log("Login response status:", response.status);
-      if (response.status === 201) {
-        console.log("Login successful:", response);
-        // localStorage.setItem("auth_token", response.token);
-        // localStorage.setItem("user_id", response.accountId);
-        // loginModal.classList.add("hidden");
+      localStorage.setItem("auth_token", response.token);
+      localStorage.setItem("user_id", response.accountId);
+      loginModal.classList.add("hidden");
 
-        // if (chart) chart.style.display = "block";
-        // if (actionButtons) actionButtons.style.display = "block";
-        // if (totalCard) totalCard.style.display = "block";
+      if (chart) chart.style.display = "block";
+      if (actionButtons) actionButtons.style.display = "block";
+      if (totalCard) totalCard.style.display = "block";
 
-        // loadAssets();
-      } else {
-        alert("Invalid credentials. Please try again.");
-      }
+      await loadAssets();
     } catch (error) {
       console.error("Authentication error:", error);
       alert("Login failed. Please try again later.");
