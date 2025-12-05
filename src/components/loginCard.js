@@ -125,14 +125,10 @@ export function showLoginCard() {
     try {
       const response = await login(username, password);
 
-      console.log("Login response:", response);
-
       if (response.status === 201) {
-        const data = await response.json();
-
-        console.log("Login successful:", data);
-        localStorage.setItem("auth_token", data.token);
-        localStorage.setItem("user_id", data.accountId);
+        console.log("Login successful:", response);
+        localStorage.setItem("auth_token", response.token);
+        localStorage.setItem("user_id", response.accountId);
         loginModal.classList.add("hidden");
 
         if (chart) chart.style.display = "block";
