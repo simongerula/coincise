@@ -11,40 +11,44 @@ export function renderAssets(assets, total) {
 
 const createAssetElement = (asset, index, total) => {
   console.log("Rendering asset:", asset);
-  const assetDiv = document.createElement("div");
-  assetDiv.className = "asset";
+  const assetName = document.createElement("div");
+  assetName.textContent = asset.name || "Unnamed Asset";
+  assetName.className = "asset-name";
 
-  const rankDiv = document.createElement("div");
-  rankDiv.className = "asset-rank";
-  rankDiv.textContent = index + 1;
+  // const assetDiv = document.createElement("div");
+  // assetDiv.className = "asset";
 
-  const infoDiv = document.createElement("div");
-  infoDiv.className = "asset-info";
+  // const rankDiv = document.createElement("div");
+  // rankDiv.className = "asset-rank";
+  // rankDiv.textContent = index + 1;
 
-  const nameDiv = document.createElement("div");
-  nameDiv.className = "asset-name";
-  nameDiv.textContent = asset.name;
+  // const infoDiv = document.createElement("div");
+  // infoDiv.className = "asset-info";
 
-  const balanceDiv = document.createElement("div");
-  balanceDiv.className = "asset-balance";
-  balanceDiv.textContent = `${asset.balance} ${asset.symbol}`;
+  // const nameDiv = document.createElement("div");
+  // nameDiv.className = "asset-name";
+  // nameDiv.textContent = asset.name;
 
-  const worthDiv = document.createElement("div");
-  worthDiv.className = "asset-worth";
-  worthDiv.textContent = `$${asset.worth.toFixed(2)}`;
+  // const balanceDiv = document.createElement("div");
+  // balanceDiv.className = "asset-balance";
+  // balanceDiv.textContent = `${asset.balance} ${asset.symbol}`;
 
-  const percentageDiv = document.createElement("div");
-  percentageDiv.className = "asset-percentage";
-  const percentage = total ? ((asset.worth / total) * 100).toFixed(2) : "0.00";
-  percentageDiv.textContent = `${percentage}%`;
+  // const worthDiv = document.createElement("div");
+  // worthDiv.className = "asset-worth";
+  // worthDiv.textContent = `$${asset.worth.toFixed(2)}`;
 
-  infoDiv.appendChild(nameDiv);
-  infoDiv.appendChild(balanceDiv);
+  // const percentageDiv = document.createElement("div");
+  // percentageDiv.className = "asset-percentage";
+  // const percentage = total ? ((asset.worth / total) * 100).toFixed(2) : "0.00";
+  // percentageDiv.textContent = `${percentage}%`;
 
-  assetDiv.appendChild(rankDiv);
-  assetDiv.appendChild(infoDiv);
-  assetDiv.appendChild(worthDiv);
-  assetDiv.appendChild(percentageDiv);
+  // infoDiv.appendChild(nameDiv);
+  // infoDiv.appendChild(balanceDiv);
 
-  return assetDiv;
+  // assetDiv.appendChild(rankDiv);
+  // assetDiv.appendChild(infoDiv);
+  // assetDiv.appendChild(worthDiv);
+  // assetDiv.appendChild(percentageDiv);
+
+  return assetName;
 };
