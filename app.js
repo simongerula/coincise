@@ -35,6 +35,8 @@ export async function loadAssets() {
     const container = document.getElementById("assets");
     container.innerHTML = "";
 
+    console.log("Rendering assets...");
+    console.log("Assets:", assets);
     renderAssets(assets, total);
   } catch (error) {
     if (error instanceof Error && error.message === "Unauthorized") {
@@ -50,7 +52,7 @@ export async function loadAssets() {
 
 document.addEventListener("DOMContentLoaded", loadAssets);
 
-// function getAuthHeaders() {
+// function await getAuthHeaders() {
 //   const token = localStorage.getItem("auth_token");
 //   return {
 //     Authorization: `Bearer ${token}`,
@@ -214,7 +216,7 @@ document.addEventListener("DOMContentLoaded", loadAssets);
 //           try {
 //             const response = await fetch(
 //               `https://coincise-api.simongerula.workers.dev/assets/${asset.id}`,
-//               { method: "DELETE", headers: getAuthHeaders() }
+//               { method: "DELETE", headers: await getAuthHeaders() }
 //             );
 //             if (!response.ok) throw new Error("Network response was not ok");
 //             await loadAssets();
@@ -259,7 +261,7 @@ document.addEventListener("DOMContentLoaded", loadAssets);
 
 //           const response = await fetch(
 //             `https://coincise-api.simongerula.workers.dev/asset-movements?assetId=${assetId}`,
-//             { headers: getAuthHeaders() }
+//             { headers: await getAuthHeaders() }
 //           );
 //           if (!response.ok) throw new Error("Failed to fetch movements");
 
@@ -381,7 +383,7 @@ document.addEventListener("DOMContentLoaded", loadAssets);
 //   try {
 //     const response = await fetch(
 //       `https://coincise-api.simongerula.workers.dev/worth-history?accountId=${userId}`,
-//       { headers: getAuthHeaders() }
+//       { headers: await getAuthHeaders() }
 //     );
 
 //     if (!response.ok) throw new Error("Failed to load worth history");
@@ -700,7 +702,7 @@ document.addEventListener("DOMContentLoaded", loadAssets);
 //         "https://coincise-api.simongerula.workers.dev/assets/",
 //         {
 //           method: "POST",
-//           headers: getAuthHeaders(),
+//           headers: await getAuthHeaders(),
 //           body: JSON.stringify({ name, balance, annualReturn }),
 //         }
 //       );
@@ -723,7 +725,7 @@ document.addEventListener("DOMContentLoaded", loadAssets);
 //     `https://coincise-api.simongerula.workers.dev/assets/${assets[index].id}`,
 //     {
 //       method: "PUT",
-//       headers: getAuthHeaders(),
+//       headers: await getAuthHeaders(),
 //       body: JSON.stringify({
 //         balance: assets[index].balance,
 //         isValueAdjustment: isValueAdjustment,
@@ -1191,7 +1193,7 @@ document.addEventListener("DOMContentLoaded", loadAssets);
 //         "https://coincise-api.simongerula.workers.dev/transfer",
 //         {
 //           method: "POST",
-//           headers: getAuthHeaders(),
+//           headers: await getAuthHeaders(),
 //           body: JSON.stringify({
 //             fromAssetId: fromAsset.id,
 //             toAssetId,

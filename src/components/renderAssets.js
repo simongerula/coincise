@@ -2,6 +2,7 @@ export function renderAssets(assets, total) {
   const container = document.getElementById("assets");
   container.innerHTML = "";
 
+  console.log("Total worth:", total);
   assets.forEach((asset, index) => {
     const el = createAssetElement(asset, index, total);
     container.appendChild(el);
@@ -9,6 +10,7 @@ export function renderAssets(assets, total) {
 }
 
 const createAssetElement = (asset, index, total) => {
+  console.log("Rendering asset:", asset);
   const assetDiv = document.createElement("div");
   assetDiv.className = "asset";
 

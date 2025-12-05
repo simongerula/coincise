@@ -6,7 +6,7 @@ import { BASE_URL, getAuthHeaders } from "../utils/auth.js";
 export async function fetchWorthHistory(userId) {
   const response = await fetch(
     `${BASE_URL}/worth-history?accountId=${userId}`,
-    { headers: getAuthHeaders() }
+    { headers: await getAuthHeaders() }
   );
   if (!response.ok) throw new Error("Failed to load worth history");
   return response.json();

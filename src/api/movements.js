@@ -6,7 +6,7 @@ import { BASE_URL, getAuthHeaders } from "../utils/auth.js";
 export async function fetchAssetMovements(assetId) {
   const response = await fetch(
     `${BASE_URL}/asset-movements?assetId=${assetId}`,
-    { headers: getAuthHeaders() }
+    { headers: await getAuthHeaders() }
   );
   if (!response.ok) throw new Error("Failed to fetch movements");
   return response.json();

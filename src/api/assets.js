@@ -20,7 +20,7 @@ export async function fetchAssets() {
 export async function deleteAsset(asset) {
   const response = await fetch(`${BASE_URL}/assets/${asset.id}`, {
     method: "DELETE",
-    headers: getAuthHeaders(),
+    headers: await getAuthHeaders(),
   });
   if (!response.ok) throw new Error("Network response was not ok");
   return response.json();
@@ -32,7 +32,7 @@ export async function deleteAsset(asset) {
 export async function createAsset(name, balance) {
   const response = await fetch(`${BASE_URL}/assets/`, {
     method: "POST",
-    headers: getAuthHeaders(),
+    headers: await getAuthHeaders(),
     body: JSON.stringify({ name, balance }),
   });
   if (!response.ok) throw new Error("Failed to create asset");
@@ -46,7 +46,7 @@ export async function updateAssetBalance(index, amount, assets) {
   assets[index].balance += amount;
   const response = await fetch(`${BASE_URL}/assets/${assets[index].id}`, {
     method: "PUT",
-    headers: getAuthHeaders(),
+    headers: await getAuthHeaders(),
     body: JSON.stringify({ balance: assets[index].balance }),
   });
   if (!response.ok) throw new Error("Failed to update asset balance");
@@ -59,7 +59,7 @@ export async function updateAssetBalance(index, amount, assets) {
 export async function transferFunds(fromAsset, toAssetId, amount) {
   const response = await fetch(`${BASE_URL}/transfer`, {
     method: "POST",
-    headers: getAuthHeaders(),
+    headers: await getAuthHeaders(),
     body: JSON.stringify({
       fromAssetId: fromAsset.id,
       toAssetId,
